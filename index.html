@@ -502,9 +502,10 @@
         <script type="module">
           import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
+
           const supabase = createClient(
-            'https://npzphsqowogpoxdavyrn.supabase.co', // ✅ Your Supabase project URL
-            'YOUR-ANON-KEY-HERE'                       // ✅ Your public anon key
+            import.meta.env.VITE_SUPABASE_URL,
+            import.meta.env.VITE_SUPABASE_ANON_KEY
           )
 
           // Elements
