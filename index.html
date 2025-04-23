@@ -10,14 +10,14 @@
             href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="styles.css" />
+        <link rel="stylesheet" href="src/style.css" />
         <!-- Make sure favi.png is accessible at this path -->
         <link rel="icon" href="images/favi.png" type="image/png" />
         <script>
-          window.env = {
-            VITE_SUPABASE_URL: "{{VITE_SUPABASE_URL}}",
-            VITE_SUPABASE_ANON_KEY: "{{VITE_SUPABASE_ANON_KEY}}"
-          };
+            window.env = {
+                VITE_SUPABASE_URL: "{{VITE_SUPABASE_URL}}",
+                VITE_SUPABASE_ANON_KEY: "{{VITE_SUPABASE_ANON_KEY}}",
+            };
         </script>
     </head>
     <body>
@@ -35,16 +35,26 @@
                 </ul>
             </nav>
             <div class="user-menu-wrapper">
-              <div class="user-circle" id="user-menu">
-                <span id="user-initials" style="display: none;"></span>
-                <img id="user-avatar" src="images/user-icon.svg" alt="User" />
-              </div>
-              <div class="user-dropdown" id="user-dropdown" style="display: none;">
-                <ul>
-                  <li id="login-option">Sign In</li>
-                  <li id="logout-option" style="display: none;">Sign Out</li>
-                </ul>
-              </div>
+                <div class="user-circle" id="user-menu">
+                    <span id="user-initials" style="display: none"></span>
+                    <img
+                        id="user-avatar"
+                        src="images/user-icon.svg"
+                        alt="User"
+                    />
+                </div>
+                <div
+                    class="user-dropdown"
+                    id="user-dropdown"
+                    style="display: none"
+                >
+                    <ul>
+                        <li id="login-option">Sign In</li>
+                        <li id="logout-option" style="display: none">
+                            Sign Out
+                        </li>
+                    </ul>
+                </div>
             </div>
         </header>
 
@@ -190,8 +200,6 @@
             </section>
 
             <section id="lenses" class="info-block">
-
-
                 <div class="lens-explainer">
                     <h3>What Are Lenses?</h3>
                     <p>
@@ -218,10 +226,8 @@
                             meme
                         </li>
                         <li>
-                            <strong>
-                                ...and many others </strong>: each with their own voice
-                                and worldview</
-                            >
+                            <strong> ...and many others </strong>: each with
+                            their own voice and worldview >
                         </li>
                     </ul>
                     <p>
@@ -230,7 +236,7 @@
                         surreal, or wise.
                     </p>
                 </div>
-                 <h2>Meet the Lenses</h2>
+                <h2>Meet the Lenses</h2>
                 <div class="lens-filter">
                     <label>Filter lenses:</label>
                     <button type="button" data-filter="all" class="active">
@@ -250,7 +256,10 @@
                 <div class="lens-grid">
                     <div class="lens-card" data-type="analytical">
                         <!-- Make sure images are accessible at these paths -->
-                        <img src="images/circles/helga.jpg" alt="Dr. Helga Stein" />
+                        <img
+                            src="images/circles/helga.jpg"
+                            alt="Dr. Helga Stein"
+                        />
                         <strong>Dr. Helga Stein</strong>
                         <em>Jungian Analyst</em>
                         <p>
@@ -283,7 +292,10 @@
                         </p>
                     </div>
                     <div class="lens-card" data-type="mystical">
-                        <img src="images/circles/zafir.jpg" alt="Shaykh Zafir" />
+                        <img
+                            src="images/circles/zafir.jpg"
+                            alt="Shaykh Zafir"
+                        />
                         <strong>Shaykh Zafir</strong>
                         <em>Poetic Mystic</em>
                         <p>
@@ -303,7 +315,10 @@
                         </p>
                     </div>
                     <div class="lens-card" data-type="analytical">
-                        <img src="images/circles/lang.jpg" alt="Dr. Margaret Lang" />
+                        <img
+                            src="images/circles/lang.jpg"
+                            alt="Dr. Margaret Lang"
+                        />
                         <strong>Dr. Margaret Lang</strong>
                         <em>Post-Freudian Analyst</em>
                         <p>
@@ -313,7 +328,10 @@
                         </p>
                     </div>
                     <div class="lens-card" data-type="synthetic">
-                        <img src="images/circles/marquez.jpg" alt="Isidoro Marquez" />
+                        <img
+                            src="images/circles/marquez.jpg"
+                            alt="Isidoro Marquez"
+                        />
                         <strong>Isidoro Marquez</strong>
                         <em>Literary Dreamer</em>
                         <p>
@@ -359,7 +377,10 @@
                         </p>
                     </div>
                     <div class="lens-card" data-type="mystical">
-                        <img src="images/circles/pranava.jpg" alt="Swami Pranava" />
+                        <img
+                            src="images/circles/pranava.jpg"
+                            alt="Swami Pranava"
+                        />
                         <strong>Swami Pranava</strong>
                         <em>Yoga Sage</em>
                         <p>
@@ -379,7 +400,10 @@
                         </p>
                     </div>
                     <div class="lens-card" data-type="analytical">
-                        <img src="images/circles/axon.jpg" alt="Dr. Lina Axon" />
+                        <img
+                            src="images/circles/axon.jpg"
+                            alt="Dr. Lina Axon"
+                        />
                         <strong>Dr. Lina Axon</strong>
                         <em>Neuroscientist</em>
                         <p>
@@ -389,7 +413,10 @@
                         </p>
                     </div>
                     <div class="lens-card" data-type="mystical">
-                        <img src="images/circles/rowan.jpg" alt="Mother Rowan" />
+                        <img
+                            src="images/circles/rowan.jpg"
+                            alt="Mother Rowan"
+                        />
                         <strong>Mother Rowan</strong>
                         <em>Witch</em>
                         <p>
@@ -399,7 +426,10 @@
                         </p>
                     </div>
                     <div class="lens-card" data-type="synthetic">
-                        <img src="images/circles/patchwork.jpg" alt="Patchwork" />
+                        <img
+                            src="images/circles/patchwork.jpg"
+                            alt="Patchwork"
+                        />
                         <strong>Patchwork</strong>
                         <em>Simulationist</em>
                         <p>
@@ -503,87 +533,8 @@
 
         <!-- External JavaScript File -->
         <!-- Make sure scripts.js is in the same directory or provide the correct path -->
-        <script src="scripts.js" defer></script>
-        <script type="module">
-          import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-
-          const supabase = createClient(
-            window.env.VITE_SUPABASE_URL,
-            window.env.VITE_SUPABASE_ANON_KEY
-          )
-
-          // Elements
-          const userMenu = document.getElementById('user-menu')
-          const userDropdown = document.getElementById('user-dropdown')
-          const userAvatar = document.getElementById('user-avatar')
-          const userInitials = document.getElementById('user-initials')
-          const loginOption = document.getElementById('login-option')
-          const logoutOption = document.getElementById('logout-option')
-
-          // Auth UI toggle
-          userMenu.addEventListener('click', () => {
-            userDropdown.style.display =
-              userDropdown.style.display === 'block' ? 'none' : 'block'
-          })
-
-          document.addEventListener('click', (e) => {
-            if (!userMenu.contains(e.target) && !userDropdown.contains(e.target)) {
-              userDropdown.style.display = 'none'
-            }
-          })
-
-          // Auth state
-          const { data: { session } } = await supabase.auth.getSession()
-          updateUserUI(session)
-
-          supabase.auth.onAuthStateChange((_event, session) => {
-            updateUserUI(session)
-          })
-
-          // Update user circle
-          function updateUserUI(session) {
-            if (session?.user) {
-              const meta = session.user.user_metadata || {}
-              const name = meta.name || meta.full_name || ''
-              const initials = name
-                .split(' ')
-                .map((n) => n[0])
-                .join('')
-                .slice(0, 2)
-                .toUpperCase()
-
-              if (meta.avatar_url) {
-                userAvatar.src = meta.avatar_url
-                userAvatar.style.display = 'block'
-                userInitials.style.display = 'none'
-              } else {
-                userInitials.textContent = initials
-                userInitials.style.display = 'block'
-                userAvatar.style.display = 'none'
-              }
-
-              loginOption.style.display = 'none'
-              logoutOption.style.display = 'block'
-            } else {
-              userAvatar.src = 'images/user-icon.svg'
-              userAvatar.style.display = 'block'
-              userInitials.style.display = 'none'
-              loginOption.style.display = 'block'
-              logoutOption.style.display = 'none'
-            }
-          }
-
-          // Login
-          loginOption.addEventListener('click', async () => {
-            await supabase.auth.signInWithOAuth({ provider: 'google' })
-          })
-
-          // Logout
-          logoutOption.addEventListener('click', async () => {
-            await supabase.auth.signOut()
-            userDropdown.style.display = 'none'
-          })
-        </script>
+        <script type="module" src="/src/main.js"></script>
+        <script type="module"></script>
     </body>
 </html>
