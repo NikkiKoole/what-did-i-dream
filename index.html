@@ -13,7 +13,12 @@
         <link rel="stylesheet" href="styles.css" />
         <!-- Make sure favi.png is accessible at this path -->
         <link rel="icon" href="images/favi.png" type="image/png" />
-
+        <script>
+          window.env = {
+            VITE_SUPABASE_URL: "{{VITE_SUPABASE_URL}}",
+            VITE_SUPABASE_ANON_KEY: "{{VITE_SUPABASE_ANON_KEY}}"
+          };
+        </script>
     </head>
     <body>
         <header class="navbar">
