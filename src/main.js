@@ -234,3 +234,14 @@ document.getElementById("buy-10").addEventListener("click", async () => {
   const { url } = await res.json();
   window.location.href = url;
 });
+// After user check
+const banner = document.getElementById("free-token-banner");
+const signInBtn = document.getElementById("signin-cta");
+
+if (!session?.user && banner) {
+  banner.style.display = "block";
+}
+
+signInBtn?.addEventListener("click", async () => {
+  await supabase.auth.signInWithOAuth({ provider: "google" });
+});

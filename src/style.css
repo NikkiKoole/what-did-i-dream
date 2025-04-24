@@ -250,6 +250,18 @@ nav a:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Smaller shadow */
     background-color: #e0601b; /* Even darker shade when pressed */
 }
+
+.promo-banner {
+    background: #fff5ea;
+    color: #2c1e16;
+    font-size: 1rem;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e0d2c0;
+}
+.promo-banner strong {
+    font-weight: 600;
+}
 /* --- Lens Picker --- */
 .lens-explainer {
     background: #fffdf9;
@@ -258,6 +270,7 @@ nav a:hover {
     padding: 1.5rem;
     max-width: 700px;
     margin: 2rem auto;
+    margin-top: 0;
     text-align: left;
     font-size: 1rem;
     color: #3b2c23;
@@ -344,9 +357,107 @@ nav a:hover {
     background: var(--bg-section-medium);
     text-align: center;
 }
+.subtext {
+    font-size: 1rem;
+    color: #6a584b;
+    margin-top: -0.5rem;
+    margin-bottom: 2rem;
+}
 #lenses {
     background: var(--bg-section-light);
 } /* Alternate bg */
+
+.pricing-section {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fefaf4;
+}
+
+.token-options {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    max-width: 900px;
+    margin: 2rem auto 0;
+}
+
+.token-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.shared-token-img {
+    width: 220px;
+    margin: 1rem auto 2rem;
+    opacity: 0.9;
+    border-radius: 50%;
+}
+.token-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.token-card p {
+    font-size: 1rem;
+    color: #6a584b;
+}
+.why-tokens {
+    background: #fffdf9;
+    border: 1px solid #e7e0d5;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    max-width: 600px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+.why-tokens h4 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #2c1e16;
+}
+
+.why-tokens p {
+    font-size: 1rem;
+    color: #6a584b;
+    line-height: 1.5;
+}
+.token-card button {
+    margin-top: 1rem;
+    background: #2c1e16;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+.token-card p {
+    display: block;
+    font-size: 2.5rem; /* Make the price large */
+    font-weight: 600;
+    color: var(--text-heading);
+    line-height: 1.1;
+    margin-bottom: 0.25rem;
+}
+.token-card h4 {
+    display: block;
+    font-size: 2.5rem; /* Make the price large */
+    font-weight: 600;
+    color: var(--text-heading);
+    line-height: 1.1;
+    margin-bottom: 0.25rem;
+}
+.token-card .caption {
+    font-size: 0.95rem;
+    color: #6a584b;
+    margin: 0.5rem 0 1rem;
+    line-height: 1.4;
+}
 #pricing {
     background: var(--bg-section-light);
 }
@@ -539,73 +650,15 @@ nav a:hover {
     box-shadow: var(--shadow-light);
     text-align: center;
 }
-.price-card h3 {
-    margin-top: 0;
-    font-size: 1.2rem;
+.tag {
+    display: inline-block;
+    background: #2c1e16;
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
     margin-bottom: 0.5rem;
 }
-.price-card p {
-    font-size: 1rem;
-    color: var(--text-dark);
-    margin-bottom: 0.5rem; /* Reduced margin */
-    line-height: 1.4;
-}
-.price-card span {
-    /* Style the price/note */
-    display: block;
-    font-size: 1.2rem; /* Make price stand out */
-    font-weight: 600;
-    color: var(--text-heading);
-    margin-top: 0.25rem;
-}
-.price-card:first-child span {
-    /* Style the "Free" note */
-    font-size: 1rem;
-    font-weight: 400;
-    color: var(--text-muted);
-}
-
-.pricing-note {
-    margin-top: 2.5rem;
-    font-size: 0.9rem;
-    color: var(--text-muted);
-}
-
-/* --- Simple Pricing Display --- */
-.single-price-display {
-    background: var(--bg-card);
-    padding: 2rem 2.5rem; /* Generous padding */
-    border-radius: 12px;
-    box-shadow: var(--shadow-light);
-    max-width: 450px; /* Control the max width */
-    margin: 2.5rem auto 0; /* Center it and add top margin */
-    text-align: center;
-    border-top: 6px solid var(--lens-mystical); /* Use one of the lens colors for accent */
-}
-
-.single-price-display .price-amount {
-    display: block;
-    font-size: 3.5rem; /* Make the price large */
-    font-weight: 600;
-    color: var(--text-heading);
-    line-height: 1.1;
-    margin-bottom: 0.25rem;
-}
-
-.single-price-display .price-description {
-    font-size: 1.1rem;
-    color: var(--text-dark);
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.single-price-display .price-details {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-    line-height: 1.5;
-    margin-bottom: 0; /* No margin at the bottom */
-}
-
 /* --- Footer --- */
 footer {
     background: var(--bg-button-dark);
