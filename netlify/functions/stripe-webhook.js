@@ -46,10 +46,16 @@ export async function handler(req) {
       .single();
 
     if (user?.id) {
+      // await supabase
+      //   .from("profiles")
+      //   .update({ credits: supabase.raw(`credits + ${tokensToAdd}`) })
+      //   .eq("id", user.id);
+
       await supabase
         .from("profiles")
-        .update({ credits: supabase.raw(`credits + ${tokensToAdd}`) })
-        .eq("id", user.id);
+        .update({}) // must provide at least an empty object
+        .eq("id", user.id)
+        .increment({ credits: tokensToAdd });
     }
   }
 
