@@ -62,7 +62,10 @@ function updateUserUI(session) {
     }
 
     // Fetch and display credits
-    fetchUserCredits(session.user.id);
+
+    if (session?.user?.id) {
+      setTimeout(() => fetchUserCredits(session.user.id), 200);
+    }
   } else {
     userAvatar.src = "images/user-icon.svg";
     userAvatar.style.display = "block";
@@ -177,10 +180,30 @@ document.addEventListener("click", (e) => {
     data: { session },
   } = await supabase.auth.getSession();
   updateUserUI(session);
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   if (!session?.user && banner) banner.style.display = "block";
 
-  supabase.auth.onAuthStateChange((_event, session) => {
+  supabase.auth.onAuthStateChange(async (_event, session) => {
     updateUserUI(session);
+
+    if (session?.user) {
+      const { id, email } = session.user;
+
+      const { error } = await supabase.from("profiles").upsert(
+        { id, email }, // Do not include credits here!
+        { onConflict: "id" },
+      );
+
+      if (error) {
+        console.warn("⚠️ Failed to upsert profile row:", error.message);
+      } else {
+        console.log("✅ User profile ensured");
+      }
+    }
   });
 })();
 

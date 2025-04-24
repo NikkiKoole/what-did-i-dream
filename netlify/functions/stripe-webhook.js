@@ -49,8 +49,14 @@ export async function handler(req) {
       console.log("🧾 Price ID:", priceId);
       console.log("🎟️ Tokens to add:", tokensToAdd);
 
+      // const { data: user, error: userErr } = await supabase
+      //   .from("auth.users") // change to 'auth.users' if needed
+      //   .select("id")
+      //   .eq("email", session.customer_email)
+      //   .maybeSingle();
+
       const { data: user, error: userErr } = await supabase
-        .from("auth.users") // change to 'auth.users' if needed
+        .from("profiles")
         .select("id")
         .eq("email", session.customer_email)
         .maybeSingle();
