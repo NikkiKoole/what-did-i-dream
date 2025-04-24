@@ -15,26 +15,12 @@ const supabase = createClient(
 export async function handler(req) {
   console.log("📩 Webhook received");
 
-  console.log("🧪 typeof req.body:", typeof req.body);
-  console.log("🧪 body preview:", JSON.stringify(req.body).slice(0, 200));
-
-  let rawBody;
-  try {
-    rawBody = await getRawBody(req);
-  } catch (err) {
-    console.error("❌ Failed to read raw body:", err.message);
-    return {
-      statusCode: 400,
-      body: "Failed to read request body",
-    };
-  }
-
   const sig = req.headers["stripe-signature"];
   let event;
 
   try {
     event = stripe.webhooks.constructEvent(
-      rawBody,
+      req.body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET,
     );
