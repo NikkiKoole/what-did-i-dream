@@ -13,6 +13,7 @@ export async function handler(event) {
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${process.env.SITE_URL}/success`,
       cancel_url: `${process.env.SITE_URL}/cancel`,
+      customer_email: event.headers["x-user-email"],
     });
 
     return {

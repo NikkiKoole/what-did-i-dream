@@ -230,6 +230,10 @@ document.getElementById("buy-10").addEventListener("click", async () => {
     body: JSON.stringify({
       priceId: "price_1RH3rARXMCF7HbNeDG5a0icL", // the Stripe price ID from your dashboard
     }),
+    headers: {
+      "Content-Type": "application/json",
+      "x-user-email": session.user.email,
+    },
   });
   const { url } = await res.json();
   window.location.href = url;
