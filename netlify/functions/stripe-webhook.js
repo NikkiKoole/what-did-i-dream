@@ -9,7 +9,7 @@ const supabase = createClient(
 
 export async function handler(req) {
   const sig = req.headers["stripe-signature"];
-
+  console.log(req);
   let event;
   try {
     event = stripe.webhooks.constructEvent(
