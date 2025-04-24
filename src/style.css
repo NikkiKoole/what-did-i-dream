@@ -186,7 +186,12 @@ nav a:hover {
     padding: 5rem 2rem 4rem; /* Adjusted padding */
     background: var(--bg-section-light);
 }
-
+.hello-user {
+    font-size: 1.4rem;
+    margin-top: 1rem;
+    color: #6a584b;
+    font-style: italic;
+}
 .hero .sub {
     font-style: italic;
     color: var(--text-muted);

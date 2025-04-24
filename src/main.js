@@ -91,6 +91,7 @@ window.addEventListener("scroll", () => {
     isShrunk = false;
   }
 });
+
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 const supabase = createClient(
@@ -159,6 +160,20 @@ function updateUserUI(session) {
     loginOption.style.display = "block";
     logoutOption.style.display = "none";
   }
+
+  const helloText = document.getElementById("hello-user");
+  const nameSpan = document.getElementById("user-name");
+
+  if (helloText && nameSpan && session?.user) {
+    const meta = session.user.user_metadata || {};
+    const name = meta.full_name || meta.name || "dreamer";
+    const firstName = name.split(" ")[0];
+
+    nameSpan.textContent = firstName;
+    helloText.style.display = "block";
+  } else if (helloText) {
+    helloText.style.display = "none";
+  }
 }
 
 // Login
@@ -170,4 +185,52 @@ loginOption.addEventListener("click", async () => {
 logoutOption.addEventListener("click", async () => {
   await supabase.auth.signOut();
   userDropdown.style.display = "none";
+});
+
+// Triggered when the user submits their dream
+document.getElementById("submit-dream").addEventListener("click", async () => {
+  const dreamInput = document.getElementById("dream-input").value.trim();
+  const selectedLenses = Array.from(
+    document.querySelectorAll('input[name="lens"]:checked'),
+  ).map((cb) => cb.value);
+
+  const {
+    data: { user },
+    error: sessionError,
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    alert("You must be logged in to save your dream.");
+    return;
+  }
+
+  const { error, data } = await supabase.from("dreams").insert([
+    {
+      user_id: user.id,
+      dream_text: dreamInput,
+      lenses: selectedLenses,
+    },
+  ]);
+
+  if (error) {
+    console.error("Error saving dream:", error);
+    alert("Something went wrong. Try again.");
+  } else {
+    alert("Your dream has been saved!");
+    document.getElementById("dream-input").value = "";
+    document
+      .querySelectorAll('input[name="lens"]')
+      .forEach((cb) => (cb.checked = false));
+  }
+});
+
+document.getElementById("buy-10").addEventListener("click", async () => {
+  const res = await fetch("/.netlify/functions/create-checkout", {
+    method: "POST",
+    body: JSON.stringify({
+      priceId: "price_xxxxxxxxxxx", // the Stripe price ID from your dashboard
+    }),
+  });
+  const { url } = await res.json();
+  window.location.href = url;
 });

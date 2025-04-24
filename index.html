@@ -13,12 +13,6 @@
         <link rel="stylesheet" href="src/style.css" />
         <!-- Make sure favi.png is accessible at this path -->
         <link rel="icon" href="images/favi.png" type="image/png" />
-        <script>
-            window.env = {
-                VITE_SUPABASE_URL: "{{VITE_SUPABASE_URL}}",
-                VITE_SUPABASE_ANON_KEY: "{{VITE_SUPABASE_ANON_KEY}}",
-            };
-        </script>
     </head>
     <body>
         <header class="navbar">
@@ -59,7 +53,11 @@
         </header>
 
         <main>
+            <button id="buy-10">Buy 10 Tokens (€2.50)</button>
             <section class="hero">
+                <p class="hello-user" id="hello-user" style="display: none">
+                    Hello <span id="user-name">dreamer</span>!
+                </p>
                 <h1>What did I dream?</h1>
                 <p class="sub">
                     Tell me your dream. Pick your lenses. Begin the unraveling.
@@ -535,6 +533,5 @@
         <!-- Make sure scripts.js is in the same directory or provide the correct path -->
 
         <script type="module" src="/src/main.js"></script>
-        <script type="module"></script>
     </body>
 </html>
