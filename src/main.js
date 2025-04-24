@@ -228,7 +228,7 @@ document.getElementById("buy-10").addEventListener("click", async () => {
   const res = await fetch("/.netlify/functions/create-checkout", {
     method: "POST",
     body: JSON.stringify({
-      priceId: "price_xxxxxxxxxxx", // the Stripe price ID from your dashboard
+      priceId: "price_1RH3rARXMCF7HbNeDG5a0icL", // the Stripe price ID from your dashboard
     }),
   });
   const { url } = await res.json();

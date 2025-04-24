@@ -14,8 +14,8 @@ export async function handler(event) {
         quantity: 1,
       },
     ],
-    success_url: `${process.env.URL}/success`,
-    cancel_url: `${process.env.URL}/cancel`,
+    success_url: `${process.env.SITE_URL}/success`,
+    cancel_url: `${process.env.SITE_URL}/cancel`,
   });
 
   return {
