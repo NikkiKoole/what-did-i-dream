@@ -232,5 +232,5 @@ document.getElementById("buy-10").addEventListener("click", async () => {
     }),
   });
   const { url } = await res.json();
-  //window.location.href = url;
+  window.location.href = url;
 });
