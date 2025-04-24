@@ -2,9 +2,9 @@ import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import getRawBody from "raw-body";
 
-export const config = {
-  bodyParser: false, // disable Netlify's auto-body parsing
-};
+// export const config = {
+//   bodyParser: false, // disable Netlify's auto-body parsing
+// };
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const supabase = createClient(
@@ -14,6 +14,9 @@ const supabase = createClient(
 
 export async function handler(req) {
   console.log("📩 Webhook received");
+
+  console.log("🧪 typeof req.body:", typeof req.body);
+  console.log("🧪 body preview:", JSON.stringify(req.body).slice(0, 200));
 
   let rawBody;
   try {
