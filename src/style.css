@@ -187,9 +187,9 @@ nav a:hover {
     background: var(--bg-section-light);
 }
 .hello-user {
-    font-size: 1.4rem;
+    font-size: 4rem;
     margin-top: 1rem;
-    color: #6a584b;
+    color: #6a584861;
     font-style: italic;
 }
 .hero .sub {
@@ -213,12 +213,19 @@ nav a:hover {
     width: 100%; /* Full width */
     height: 150px;
     padding: 1rem;
-    border: 1px solid var(--border-medium);
+    border: 2px solid var(--border-light);
     border-radius: 8px;
     font-size: 1rem;
     font-family: var(--font-primary);
     background: var(--bg-card);
     resize: vertical; /* Allow vertical resize */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1) inset;
+}
+
+.dream-input-group textarea:focus {
+    outline: none;
+    border: 2px solid var(--border-light);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1) inset;
 }
 
 #submit-dream {

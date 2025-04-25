@@ -64,12 +64,6 @@ export async function handler(req) {
       console.log("👤 Supabase user:", user);
 
       if (user?.id) {
-        // const { error: updateErr } = await supabase
-        //   .from("profiles")
-        //   .update({})
-        //   .eq("id", user.id)
-        //   .increment({ credits: tokensToAdd });
-
         const { error: updateErr } = await supabase.rpc("increment_credits", {
           uid: user.id,
           tokens: tokensToAdd,
