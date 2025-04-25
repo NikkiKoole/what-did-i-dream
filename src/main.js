@@ -24,6 +24,7 @@ const userInitials = document.getElementById("user-initials");
 const loginOption = document.getElementById("login-option");
 const logoutOption = document.getElementById("logout-option");
 const creditCountEl = document.getElementById("credit-count");
+const journalNavItem = document.getElementById("journal-nav-item"); // <-- ADD
 
 let isShrunk = false;
 
@@ -62,7 +63,11 @@ function updateUserUI(session) {
     }
 
     // Fetch and display credits
-
+    // Show Journal link
+    if (journalNavItem) {
+      // Add check to ensure element exists
+      journalNavItem.style.display = "list-item"; // Or 'block' if preferred
+    }
     if (session?.user?.id) {
       setTimeout(() => fetchUserCredits(session.user.id), 200);
     }
@@ -74,6 +79,11 @@ function updateUserUI(session) {
     logoutOption.style.display = "none";
     const helloText = document.getElementById("hello-user");
     if (helloText) helloText.style.display = "none";
+    // Hide Journal link
+    if (journalNavItem) {
+      // Add check to ensure element exists
+      journalNavItem.style.display = "none";
+    }
   }
 }
 
