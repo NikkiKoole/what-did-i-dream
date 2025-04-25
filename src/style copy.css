@@ -167,6 +167,21 @@ nav a:hover {
     color: var(--text-muted);
 }
 
+.auth-buttons button {
+    background: var(--bg-button-dark);
+    color: var(--text-light);
+    border: none;
+    padding: 0.6rem 1.1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+    transition: background-color var(--transition-fast);
+}
+.auth-buttons button:hover {
+    background-color: #4a3a2f;
+}
+
 /* --- Hero Section --- */
 .hero {
     text-align: center;
@@ -287,6 +302,63 @@ nav a:hover {
     color: #8c7363;
     margin-right: 0.5rem;
 }
+.lens-picker {
+    margin-bottom: 3rem; /* More space after picker */
+}
+.lens-picker p {
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.lens-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem; /* Row and column gap */
+    justify-content: center;
+    margin-top: 1rem;
+    max-width: 800px; /* Limit width */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lens-options label {
+    display: inline-flex; /* Align checkbox and text */
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--bg-filter-idle);
+    padding: 0.5rem 1rem;
+    border-radius: 999px; /* Pill shape */
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all var(--transition-fast);
+    font-size: 0.95rem;
+    user-select: none; /* Prevent text selection */
+}
+
+.lens-options input[type="checkbox"] {
+    accent-color: var(--accent-purple);
+    margin: 0;
+    width: 1em; /* Consistent size */
+    height: 1em;
+    cursor: pointer;
+}
+
+/* Style label when checkbox is checked or label is hovered */
+.lens-options input[type="checkbox"]:checked + span, /* If using span wrapper */
+.lens-options label:has(input[type="checkbox"]:checked), /* If checkbox is direct child */
+.lens-options label:hover {
+    border-color: var(--border-dark);
+    background: var(--bg-filter-hover);
+    color: var(--text-dark);
+}
+
+/* Hide the actual checkbox visually but keep it accessible */
+/*.lens-options input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}*/
 
 /* --- Info Block --- */
 .info-block {
@@ -332,6 +404,10 @@ nav a:hover {
     margin: 1rem auto 2rem;
     opacity: 0.9;
     border-radius: 50%;
+}
+.token-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
 }
 
 .token-card p {
@@ -396,6 +472,34 @@ nav a:hover {
 }
 
 /* --- Lens Filter Buttons --- */
+.lens-filter {
+    text-align: center;
+    margin: -1rem auto 2.5rem; /* Adjust margins */
+}
+.lens-filter label {
+    margin-right: 0.5rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.lens-filter button {
+    background: var(--bg-filter-idle);
+    border: 1px solid var(--border-medium);
+    border-radius: 999px;
+    padding: 0.5rem 1.2rem;
+    margin: 0.5rem 0.25rem;
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.lens-filter button:hover,
+.lens-filter button.active {
+    background: var(--bg-filter-hover);
+    border-color: var(--border-dark);
+    color: var(--text-dark);
+}
 
 /* --- Lens Grid & Cards --- */
 .lens-grid {
@@ -639,7 +743,33 @@ nav a:hover {
 }
 
 /* --- Pricing Section --- */
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem; /* Slightly smaller gap */
+    justify-content: center;
+    margin-top: 2.5rem;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
+.price-card {
+    background: var(--bg-card);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-light);
+    text-align: center;
+}
+.tag {
+    display: inline-block;
+    background: #2c1e16;
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    margin-bottom: 0.5rem;
+}
 /* --- Footer --- */
 footer {
     background: var(--bg-button-dark);
@@ -713,7 +843,110 @@ footer {
 }
 
 /* --- Sign-in Modal --- */
+#signin-modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-modal-overlay);
+    align-items: center;
+    justify-content: center;
+    z-index: 1001; /* Above navbar */
+    padding: 1rem; /* Padding for small screens */
+    opacity: 0; /* Start transparent */
+    visibility: hidden; /* Start hidden */
+    transition:
+        opacity var(--transition-medium),
+        visibility var(--transition-medium);
+}
 
+#signin-modal[aria-hidden="false"] {
+    display: flex; /* Use flex to center */
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: 12px; /* Softer radius */
+    width: 100%; /* Full width on small screens */
+    max-width: 420px; /* Max width */
+    text-align: center;
+    box-shadow: var(--shadow-modal);
+    position: relative; /* For positioning close button */
+    transform: scale(0.95); /* Start slightly smaller */
+    transition: transform var(--transition-medium);
+}
+
+#signin-modal[aria-hidden="false"] .modal-content {
+    transform: scale(1); /* Scale in */
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+.modal-content p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.modal-content input[type="email"] {
+    display: block; /* Full width */
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-medium);
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: var(--font-primary);
+}
+
+#modal-submit-btn {
+    background: var(--bg-button-accent);
+    color: var(--text-light);
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-primary);
+    transition: background-color var(--transition-fast);
+    width: 100%; /* Full width button */
+    margin-top: 0.5rem;
+}
+#modal-submit-btn:hover {
+    background: #dc6a1d;
+}
+
+.modal-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    font-size: 1.75rem;
+    line-height: 1;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.25rem;
+}
+.modal-close:hover {
+    color: var(--text-dark);
+}
+
+.modal-info {
+    font-size: 0.85rem !important; /* Override default p */
+    color: var(--text-muted) !important;
+    margin-top: 1rem;
+    margin-bottom: 0 !important;
+}
 .user-menu-wrapper {
     position: relative;
     display: inline-block;
