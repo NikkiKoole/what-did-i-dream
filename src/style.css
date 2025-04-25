@@ -6,6 +6,8 @@
     --bg-section-medium: #fefaf4;
     --bg-navbar: #fff5ea;
     --bg-card: #fff;
+    --bg-card-inactive: #f3efe9;
+    --card-text-inactive: #9e8f7d;
     --bg-button-dark: #2c1e16;
     --bg-button-accent: #f47a2e; /* Orange submit button */
     --bg-filter-idle: #f3eae1;
@@ -211,7 +213,7 @@ nav a:hover {
 
 .dream-input-group textarea {
     width: 100%; /* Full width */
-    height: 150px;
+    height: 250px;
     padding: 1rem;
     border: 2px solid var(--border-light);
     border-radius: 8px;
@@ -514,7 +516,8 @@ nav a:hover {
 }
 
 .lens-card {
-    background: var(--bg-card);
+    cursor: pointer;
+    background: var(--bg-card-inactive);
     border-radius: 16px;
     box-shadow: var(--shadow-light);
     padding: 1.5rem;
@@ -538,6 +541,7 @@ nav a:hover {
     border-top-right-radius: 16px;
     margin: -1.5rem -1.5rem 1rem; /* Position at top */
     background: var(--border-light); /* Default color */
+    filter: grayscale();
 }
 
 /* Apply specific gradient based on data-type */
@@ -564,6 +568,7 @@ nav a:hover {
     margin: 0 auto 1rem;
     /* Keep JS transition for 3D effect */
     transition: transform 0.3s ease;
+    filter: sepia();
 }
 
 .lens-card strong {
@@ -573,12 +578,14 @@ nav a:hover {
     font-size: 1.15rem;
     margin-top: 0; /* Remove top margin */
     margin-bottom: 0.25rem;
-    color: var(--text-heading);
+
+    color: var(--card-text-inactive);
 }
 
 .lens-card em {
     font-size: 0.9rem;
-    color: var(--text-muted);
+
+    color: var(--card-text-inactive);
     font-style: italic;
     display: block;
     margin-bottom: 0.75rem;
@@ -587,11 +594,108 @@ nav a:hover {
 .lens-card p {
     font-size: 0.95rem;
     line-height: 1.5; /* Adjusted line height */
-    color: var(--text-dark);
+
+    color: var(--card-text-inactive);
     flex-grow: 1; /* Allow p to take remaining space */
     margin-bottom: 0; /* Remove bottom margin */
 }
 
+.lens-card.active {
+    background: var(--bg-card);
+}
+.lens-card.active strong {
+    color: var(--text-heading);
+}
+.lens-card.active em {
+    color: var(--text-muted);
+}
+.lens-card.active p {
+    color: var(--text-dark);
+}
+.lens-card.active::before {
+    filter: none;
+}
+.lens-card.active img {
+    filter: none;
+}
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+    }
+    50% {
+        transform: translateX(5px);
+    }
+    75% {
+        transform: translateX(-5px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.lens-bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.75rem;
+    max-width: 800px;
+    margin: 1rem auto;
+
+    font-size: 0.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+
+.lens-tag {
+    background: #f1e9dc;
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: #3b3228;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.lens-tag .remove-btn {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: #7c6b58;
+}
+
+.hidden {
+    display: none;
+}
+
+.shake {
+    animation: shake 0.4s ease;
+}
+.random-btn {
+    margin-top: 1rem;
+    background-color: #f4e4cc;
+    border: 1px solid #d8c2a6;
+    color: #3b3228;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.95rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.random-btn:hover {
+    background-color: #e9d5bb;
+}
 /* --- About Section --- */
 #about {
     text-align: center;

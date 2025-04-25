@@ -70,9 +70,7 @@
                     Hello <span id="user-name">dreamer</span>!
                 </p>
                 <h1>What did I dream?</h1>
-                <p class="sub">
-                    Tell me your dream. Pick your lenses. Begin the unraveling.
-                </p>
+                <p class="sub">Tell me your dream. Begin the unraveling.</p>
 
                 <div class="dream-input-group">
                     <textarea
@@ -84,131 +82,266 @@
                         See What It Means
                     </button>
                 </div>
-
-                <div class="lens-picker">
-                    <p>Pick up to 3 lenses:</p>
-                    <div class="lens-options">
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="lens"
-                                value="Jungian Analyst"
-                            />
-                            Jungian Analyst
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="lens"
-                                value="Dream-Walker"
-                            />
-                            Dream-Walker
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="lens"
-                                value="Victorian Dream Decoder"
-                            />
-                            Victorian Dream Decoder
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="lens"
-                                value="Poetic Mystic"
-                            />
-                            Poetic Mystic
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="lens"
-                                value="AI Oracle"
-                            />
-                            AI Oracle
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="lens"
-                                value="Post-Freudian Analyst"
-                            />
-                            Post-Freudian Analyst
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="lens"
-                                value="Literary Dreamer"
-                            />
-                            Literary Dreamer
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="lens"
-                                value="Alchemical Hermetic"
-                            />
-                            Alchemical Hermetic
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="lens"
-                                value="Islamic Symbolic Scholar"
-                            />
-                            Islamic Symbolic Scholar
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="lens"
-                                value="Daoist Sage"
-                            />
-                            Daoist Sage
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="lens"
-                                value="Yoga Sage"
-                            />
-                            Yoga Sage
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="lens"
-                                value="Pop Culture Witch"
-                            />
-                            Pop Culture Witch
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="lens"
-                                value="Neuroscientist"
-                            />
-                            Neuroscientist
-                        </label>
-                        <label>
-                            <input type="checkbox" name="lens" value="Witch" />
-                            Witch
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="lens"
-                                value="Simulationist"
-                            />
-                            Simulationist
-                        </label>
-                    </div>
-                </div>
             </section>
 
             <section id="lenses" class="info-block">
+                <p>
+                    We’ve already picked three powerful lenses to get you
+                    started.<br />
+                    Want to change your view? Explore and choose your own — or
+                    <button id="random-lenses" class="random-btn">
+                        let fate decide
+                    </button>
+                </p>
+                <div id="selected-lenses-bar" class="lens-bar hidden">
+                    <!-- JS will insert tags here -->
+                </div>
+                <h2>Meet the Lenses</h2>
+
+                <div class="lens-grid">
+                    <div
+                        class="lens-card"
+                        data-type="analytical"
+                        data-name="helga"
+                    >
+                        <!-- Make sure images are accessible at these paths -->
+                        <img
+                            src="images/circles/helga.jpg"
+                            alt="Dr. Helga Stein"
+                        />
+                        <strong>Dr. Helga Stein</strong>
+                        <em>Jungian Analyst</em>
+                        <p>
+                            A student of inner myth, Dr. Stein reads your dream
+                            through archetypes and ancient symbols. She guides
+                            you toward integration, not explanation.
+                        </p>
+                    </div>
+                    <div
+                        class="lens-card"
+                        data-type="mystical"
+                        data-name="otter"
+                    >
+                        <img src="images/circles/otter.jpg" alt="White Otter" />
+                        <strong>White Otter</strong>
+                        <em>Dream-Walker</em>
+                        <p>
+                            Dreams are spirit journeys to White Otter. Animals,
+                            wind, and ancestors carry messages. Listen with your
+                            whole being.
+                        </p>
+                    </div>
+                    <div
+                        class="lens-card"
+                        data-type="analytical"
+                        data-name="whitmore"
+                    >
+                        <img
+                            src="images/circles/whitmore.jpg"
+                            alt="Mrs. Clara Whitmore"
+                        />
+                        <strong>Mrs. Clara Whitmore</strong>
+                        <em>Victorian Dream Decoder</em>
+                        <p>
+                            With candlelight and a dictionary of omens, Mrs.
+                            Whitmore assigns meaning to every symbol. Precise,
+                            old-fashioned, and occasionally strict.
+                        </p>
+                    </div>
+                    <div
+                        class="lens-card"
+                        data-type="mystical"
+                        data-name="zafir"
+                    >
+                        <img
+                            src="images/circles/zafir.jpg"
+                            alt="Shaykh Zafir"
+                        />
+                        <strong>Shaykh Zafir</strong>
+                        <em>Poetic Mystic</em>
+                        <p>
+                            Zafir speaks in verses, not facts. Your dream is a
+                            veil, a flame, a whisper from the divine. Feel them,
+                            don’t solve them.
+                        </p>
+                    </div>
+                    <div
+                        class="lens-card"
+                        data-type="synthetic"
+                        data-name="azure"
+                    >
+                        <img src="images/circles/azure.jpg" alt="Azure" />
+                        <strong>Azure</strong>
+                        <em>AI Oracle</em>
+                        <p>
+                            Azure translates your dream into data: future
+                            echoes, simulations, and probabilistic patterns. She
+                            speaks the language of strange signals.
+                        </p>
+                    </div>
+                    <div
+                        class="lens-card"
+                        data-type="analytical"
+                        data-name="lang"
+                    >
+                        <img
+                            src="images/circles/lang.jpg"
+                            alt="Dr. Margaret Lang"
+                        />
+                        <strong>Dr. Margaret Lang</strong>
+                        <em>Post-Freudian Analyst</em>
+                        <p>
+                            Dreams reveal tension. Dr. Lang explores family
+                            structures, hidden desires, and roles we perform —
+                            often more than once.
+                        </p>
+                    </div>
+                    <div
+                        class="lens-card"
+                        data-type="synthetic"
+                        data-name="marquez"
+                    >
+                        <img
+                            src="images/circles/marquez.jpg"
+                            alt="Isidoro Marquez"
+                        />
+                        <strong>Isidoro Marquez</strong>
+                        <em>Literary Dreamer</em>
+                        <p>
+                            A poet-librarian from Argentina. He reads dreams as
+                            looping stories, recursive metaphors, or impossible
+                            stages with meaning hidden in absurdity.
+                        </p>
+                    </div>
+                    <div
+                        class="lens-card"
+                        data-type="mystical"
+                        data-name="severinus"
+                    >
+                        <img
+                            src="images/circles/severinus.jpg"
+                            alt="Brother Severinus"
+                        />
+                        <strong>Brother Severinus</strong>
+                        <em>Alchemical Hermetic</em>
+                        <p>
+                            Brother Severinus reads dreams as alchemical
+                            transformations—blackening, whitening, and gold. His
+                            symbols burn and rise in the language of the soul.
+                        </p>
+                    </div>
+                    <div
+                        class="lens-card"
+                        data-type="mystical"
+                        data-name="yusuf"
+                    >
+                        <img
+                            src="images/circles/yusuf.jpg"
+                            alt="Imam Yusuf ibn Kareem"
+                        />
+                        <strong>Imam Yusuf ibn Kareem</strong>
+                        <em>Islamic Symbolic Scholar</em>
+                        <p>
+                            Imam Yusuf reads dreams as divine messages, moral
+                            signs, and spiritual reflections. He offers clarity
+                            through grace and tradition.
+                        </p>
+                    </div>
+                    <div class="lens-card" data-type="mystical" data-name="lin">
+                        <img src="images/circles/lin.jpg" alt="Master Lin" />
+                        <strong>Master Lin</strong>
+                        <em>Daoist Sage</em>
+                        <p>
+                            Master Lin reads dreams as flows of spirit. Symbols
+                            come from wind, water, and timeless stillness. Let
+                            the dream pass through you like the Way.
+                        </p>
+                    </div>
+                    <div
+                        class="lens-card"
+                        data-type="mystical"
+                        data-name="pranava"
+                    >
+                        <img
+                            src="images/circles/pranava.jpg"
+                            alt="Swami Pranava"
+                        />
+                        <strong>Swami Pranava</strong>
+                        <em>Yoga Sage</em>
+                        <p>
+                            Swami Pranava reads your dream through the layers of
+                            the self. Karma, illusion, silence. A path inward to
+                            the witness state.
+                        </p>
+                    </div>
+                    <div
+                        class="lens-card"
+                        data-type="synthetic"
+                        data-name="roxy"
+                    >
+                        <img src="images/circles/roxy.jpg" alt="Roxy Mirage" />
+                        <strong>Roxy Mirage</strong>
+                        <em>Pop Culture Witch</em>
+                        <p>
+                            Roxy blends dream, trope, and meme. She reads your
+                            dream like a VHS remix—chaotic, symbolic, and
+                            weirdly accurate.
+                        </p>
+                    </div>
+                    <div
+                        class="lens-card"
+                        data-type="analytical"
+                        data-name="axon"
+                    >
+                        <img
+                            src="images/circles/axon.jpg"
+                            alt="Dr. Lina Axon"
+                        />
+                        <strong>Dr. Lina Axon</strong>
+                        <em>Neuroscientist</em>
+                        <p>
+                            Dr. Axon sees dreams as signals from your brain’s
+                            wiring. Memory, emotion, and chaos theory—decoded
+                            through neural sparks.
+                        </p>
+                    </div>
+                    <div
+                        class="lens-card"
+                        data-type="mystical"
+                        data-name="rowan"
+                    >
+                        <img
+                            src="images/circles/rowan.jpg"
+                            alt="Mother Rowan"
+                        />
+                        <strong>Mother Rowan</strong>
+                        <em>Witch</em>
+                        <p>
+                            Mother Rowan sees dreams as omens, spells, and
+                            whispers from the woods. She reads with herbs,
+                            riddles, and a flickering flame.
+                        </p>
+                    </div>
+                    <div
+                        class="lens-card"
+                        data-type="synthetic"
+                        data-name="patchwork"
+                    >
+                        <img
+                            src="images/circles/patchwork.jpg"
+                            alt="Patchwork"
+                        />
+                        <strong>Patchwork</strong>
+                        <em>Simulationist</em>
+                        <p>
+                            Patchwork sees your dream as a rupture in
+                            signal—constructed from matrix logic, myth
+                            fragments, and historical loops. Meaning emerges
+                            where systems clash.
+                        </p>
+                    </div>
+                </div>
+
                 <div class="lens-explainer">
                     <h3>What Are Lenses?</h3>
                     <p>
@@ -244,210 +377,6 @@
                         insights. Each one adds a voice — reflective, symbolic,
                         surreal, or wise.
                     </p>
-                </div>
-                <h2>Meet the Lenses</h2>
-                <div class="lens-filter">
-                    <label>Filter lenses:</label>
-                    <button type="button" data-filter="all" class="active">
-                        All
-                    </button>
-                    <button type="button" data-filter="analytical">
-                        Analytical
-                    </button>
-                    <button type="button" data-filter="mystical">
-                        Mystical
-                    </button>
-                    <button type="button" data-filter="synthetic">
-                        Synthetic
-                    </button>
-                </div>
-
-                <div class="lens-grid">
-                    <div class="lens-card" data-type="analytical">
-                        <!-- Make sure images are accessible at these paths -->
-                        <img
-                            src="images/circles/helga.jpg"
-                            alt="Dr. Helga Stein"
-                        />
-                        <strong>Dr. Helga Stein</strong>
-                        <em>Jungian Analyst</em>
-                        <p>
-                            A student of inner myth, Dr. Stein reads your dream
-                            through archetypes and ancient symbols. She guides
-                            you toward integration, not explanation.
-                        </p>
-                    </div>
-                    <div class="lens-card" data-type="mystical">
-                        <img src="images/circles/otter.jpg" alt="White Otter" />
-                        <strong>White Otter</strong>
-                        <em>Dream-Walker</em>
-                        <p>
-                            Dreams are spirit journeys to White Otter. Animals,
-                            wind, and ancestors carry messages. Listen with your
-                            whole being.
-                        </p>
-                    </div>
-                    <div class="lens-card" data-type="analytical">
-                        <img
-                            src="images/circles/whitmore.jpg"
-                            alt="Mrs. Clara Whitmore"
-                        />
-                        <strong>Mrs. Clara Whitmore</strong>
-                        <em>Victorian Dream Decoder</em>
-                        <p>
-                            With candlelight and a dictionary of omens, Mrs.
-                            Whitmore assigns meaning to every symbol. Precise,
-                            old-fashioned, and occasionally strict.
-                        </p>
-                    </div>
-                    <div class="lens-card" data-type="mystical">
-                        <img
-                            src="images/circles/zafir.jpg"
-                            alt="Shaykh Zafir"
-                        />
-                        <strong>Shaykh Zafir</strong>
-                        <em>Poetic Mystic</em>
-                        <p>
-                            Zafir speaks in verses, not facts. Your dream is a
-                            veil, a flame, a whisper from the divine. Feel them,
-                            don’t solve them.
-                        </p>
-                    </div>
-                    <div class="lens-card" data-type="synthetic">
-                        <img src="images/circles/azure.jpg" alt="Azure" />
-                        <strong>Azure</strong>
-                        <em>AI Oracle</em>
-                        <p>
-                            Azure translates your dream into data: future
-                            echoes, simulations, and probabilistic patterns. She
-                            speaks the language of strange signals.
-                        </p>
-                    </div>
-                    <div class="lens-card" data-type="analytical">
-                        <img
-                            src="images/circles/lang.jpg"
-                            alt="Dr. Margaret Lang"
-                        />
-                        <strong>Dr. Margaret Lang</strong>
-                        <em>Post-Freudian Analyst</em>
-                        <p>
-                            Dreams reveal tension. Dr. Lang explores family
-                            structures, hidden desires, and roles we perform —
-                            often more than once.
-                        </p>
-                    </div>
-                    <div class="lens-card" data-type="synthetic">
-                        <img
-                            src="images/circles/marquez.jpg"
-                            alt="Isidoro Marquez"
-                        />
-                        <strong>Isidoro Marquez</strong>
-                        <em>Literary Dreamer</em>
-                        <p>
-                            A poet-librarian from Argentina. He reads dreams as
-                            looping stories, recursive metaphors, or impossible
-                            stages with meaning hidden in absurdity.
-                        </p>
-                    </div>
-                    <div class="lens-card" data-type="mystical">
-                        <img
-                            src="images/circles/severinus.jpg"
-                            alt="Brother Severinus"
-                        />
-                        <strong>Brother Severinus</strong>
-                        <em>Alchemical Hermetic</em>
-                        <p>
-                            Brother Severinus reads dreams as alchemical
-                            transformations—blackening, whitening, and gold. His
-                            symbols burn and rise in the language of the soul.
-                        </p>
-                    </div>
-                    <div class="lens-card" data-type="mystical">
-                        <img
-                            src="images/circles/yusuf.jpg"
-                            alt="Imam Yusuf ibn Kareem"
-                        />
-                        <strong>Imam Yusuf ibn Kareem</strong>
-                        <em>Islamic Symbolic Scholar</em>
-                        <p>
-                            Imam Yusuf reads dreams as divine messages, moral
-                            signs, and spiritual reflections. He offers clarity
-                            through grace and tradition.
-                        </p>
-                    </div>
-                    <div class="lens-card" data-type="mystical">
-                        <img src="images/circles/lin.jpg" alt="Master Lin" />
-                        <strong>Master Lin</strong>
-                        <em>Daoist Sage</em>
-                        <p>
-                            Master Lin reads dreams as flows of spirit. Symbols
-                            come from wind, water, and timeless stillness. Let
-                            the dream pass through you like the Way.
-                        </p>
-                    </div>
-                    <div class="lens-card" data-type="mystical">
-                        <img
-                            src="images/circles/pranava.jpg"
-                            alt="Swami Pranava"
-                        />
-                        <strong>Swami Pranava</strong>
-                        <em>Yoga Sage</em>
-                        <p>
-                            Swami Pranava reads your dream through the layers of
-                            the self. Karma, illusion, silence. A path inward to
-                            the witness state.
-                        </p>
-                    </div>
-                    <div class="lens-card" data-type="synthetic">
-                        <img src="images/circles/roxy.jpg" alt="Roxy Mirage" />
-                        <strong>Roxy Mirage</strong>
-                        <em>Pop Culture Witch</em>
-                        <p>
-                            Roxy blends dream, trope, and meme. She reads your
-                            dream like a VHS remix—chaotic, symbolic, and
-                            weirdly accurate.
-                        </p>
-                    </div>
-                    <div class="lens-card" data-type="analytical">
-                        <img
-                            src="images/circles/axon.jpg"
-                            alt="Dr. Lina Axon"
-                        />
-                        <strong>Dr. Lina Axon</strong>
-                        <em>Neuroscientist</em>
-                        <p>
-                            Dr. Axon sees dreams as signals from your brain’s
-                            wiring. Memory, emotion, and chaos theory—decoded
-                            through neural sparks.
-                        </p>
-                    </div>
-                    <div class="lens-card" data-type="mystical">
-                        <img
-                            src="images/circles/rowan.jpg"
-                            alt="Mother Rowan"
-                        />
-                        <strong>Mother Rowan</strong>
-                        <em>Witch</em>
-                        <p>
-                            Mother Rowan sees dreams as omens, spells, and
-                            whispers from the woods. She reads with herbs,
-                            riddles, and a flickering flame.
-                        </p>
-                    </div>
-                    <div class="lens-card" data-type="synthetic">
-                        <img
-                            src="images/circles/patchwork.jpg"
-                            alt="Patchwork"
-                        />
-                        <strong>Patchwork</strong>
-                        <em>Simulationist</em>
-                        <p>
-                            Patchwork sees your dream as a rupture in
-                            signal—constructed from matrix logic, myth
-                            fragments, and historical loops. Meaning emerges
-                            where systems clash.
-                        </p>
-                    </div>
                 </div>
             </section>
 
@@ -591,6 +520,23 @@
         <!-- External JavaScript File -->
         <!-- Make sure scripts.js is in the same directory or provide the correct path -->
 
+        <div
+            id="toast"
+            style="
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #2d2a26;
+                color: white;
+                padding: 10px 16px;
+                border-radius: 6px;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                z-index: 1000;
+                pointer-events: none;
+            "
+        ></div>
         <script type="module" src="/src/main.js"></script>
     </body>
 </html>

@@ -1,0 +1,136 @@
+               <div class="lens-picker">
+                    <p>Pick up to 3 lenses:</p>
+                    <div class="lens-options">
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="lens"
+                                value="Jungian Analyst"
+                            />
+                            Jungian Analyst
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="lens"
+                                value="Dream-Walker"
+                            />
+                            Dream-Walker
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="lens"
+                                value="Victorian Dream Decoder"
+                            />
+                            Victorian Dream Decoder
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="lens"
+                                value="Poetic Mystic"
+                            />
+                            Poetic Mystic
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="lens"
+                                value="AI Oracle"
+                            />
+                            AI Oracle
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="lens"
+                                value="Post-Freudian Analyst"
+                            />
+                            Post-Freudian Analyst
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="lens"
+                                value="Literary Dreamer"
+                            />
+                            Literary Dreamer
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="lens"
+                                value="Alchemical Hermetic"
+                            />
+                            Alchemical Hermetic
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="lens"
+                                value="Islamic Symbolic Scholar"
+                            />
+                            Islamic Symbolic Scholar
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="lens"
+                                value="Daoist Sage"
+                            />
+                            Daoist Sage
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="lens"
+                                value="Yoga Sage"
+                            />
+                            Yoga Sage
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="lens"
+                                value="Pop Culture Witch"
+                            />
+                            Pop Culture Witch
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="lens"
+                                value="Neuroscientist"
+                            />
+                            Neuroscientist
+                        </label>
+                        <label>
+                            <input type="checkbox" name="lens" value="Witch" />
+                            Witch
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="lens"
+                                value="Simulationist"
+                            />
+                            Simulationist
+                        </label>
+                    </div>
+                </div>
+  <div class="lens-filter">
+                    <label>Filter lenses:</label>
+                    <button type="button" data-filter="all" class="active">
+                        All
+                    </button>
+                    <button type="button" data-filter="analytical">
+                        Analytical
+                    </button>
+                    <button type="button" data-filter="mystical">
+                        Mystical
+                    </button>
+                    <button type="button" data-filter="synthetic">
+                        Synthetic
+                    </button>
+                </div>

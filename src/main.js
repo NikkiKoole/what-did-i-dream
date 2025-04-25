@@ -10,7 +10,7 @@ const supabase = createClient(
 const images = document.querySelectorAll(".lens-card img");
 const buttons = document.querySelectorAll(".lens-filter button");
 const cards = document.querySelectorAll(".lens-card");
-const checkboxes = document.querySelectorAll('input[name="lens"]');
+//const checkboxes = document.querySelectorAll('input[name="lens"]');
 const submitBtn = document.getElementById("submit-dream");
 const dreamInput = document.getElementById("dream-input");
 const signinModal = document.getElementById("signin-modal");
@@ -106,6 +106,7 @@ images.forEach((img) => {
   });
 });
 
+// filter lenses card
 buttons.forEach((button) => {
   button.addEventListener("click", () => {
     const filter = button.getAttribute("data-filter");
@@ -127,16 +128,64 @@ buttons.forEach((button) => {
   });
 });
 
-checkboxes.forEach((cb) => {
-  cb.addEventListener("change", () => {
-    const checked = Array.from(checkboxes).filter((i) => i.checked);
-    if (checked.length > 3) {
-      cb.checked = false;
-      alert("You can only select up to 3 lenses.");
+// cards.forEach((card) => {
+//   card.addEventListener("click", () => {
+//     card.classList.toggle("active");
+//   });
+// });
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.style.opacity = 1;
+  setTimeout(() => {
+    toast.style.opacity = 0;
+  }, 2000);
+}
+cards.forEach((card) => {
+  card.addEventListener("click", () => {
+    const selectedCards = document.querySelectorAll(".lens-card.active");
+
+    // If already active, allow deselection
+    if (card.classList.contains("active")) {
+      card.classList.remove("active");
+      updateLensBar();
+      return;
     }
+
+    // If 3 are already selected, prevent and shake
+    if (selectedCards.length >= 3) {
+      card.classList.add("shake");
+
+      // Optional: remove shake class after animation ends so it can replay
+      setTimeout(() => {
+        card.classList.remove("shake");
+      }, 500); // Match your CSS animation duration
+
+      // Optional: Show toast
+      showToast("You can only select 3 lenses.");
+      updateLensBar();
+      return;
+    }
+
+    // Otherwise, allow selection
+    card.classList.add("active");
+    updateLensBar();
   });
 });
+function selectLenses(lensNames) {
+  // First, clear all selections
+  document.querySelectorAll(".lens-card.active").forEach((card) => {
+    card.classList.remove("active");
+  });
 
+  // Then, select the ones provided
+  lensNames.forEach((name) => {
+    const card = document.querySelector(`.lens-card[data-name="${name}"]`);
+    if (card) {
+      card.classList.add("active");
+    }
+  });
+}
 submitBtn.addEventListener("click", () => {
   const input = dreamInput.value.trim();
   const selected = Array.from(checkboxes).filter((i) => i.checked);
@@ -270,3 +319,67 @@ document.getElementById("buy-10").addEventListener("click", async () => {
 signInBtn?.addEventListener("click", async () => {
   await supabase.auth.signInWithOAuth({ provider: "google" });
 });
+
+document.getElementById("random-lenses").addEventListener("click", () => {
+  const allCards = Array.from(document.querySelectorAll(".lens-card"));
+  const shuffled = allCards.sort(() => 0.5 - Math.random());
+  const randomThree = shuffled.slice(0, 3);
+
+  // Clear current selections
+  allCards.forEach((card) => card.classList.remove("active"));
+
+  // Select the random three
+  randomThree.forEach((card) => card.classList.add("active"));
+  // showToast("Fate decided:");
+
+  // Select the random three and collect names from <strong>
+  const names = randomThree.map((card) => {
+    const nameEl = card.querySelector("strong");
+    return nameEl ? nameEl.textContent.trim() : "Unknown";
+  });
+  showToast("Fate decided: " + names.join(", "));
+
+  // Update the floating lens bar
+  updateLensBar();
+});
+
+function updateLensBar() {
+  const lensBar = document.getElementById("selected-lenses-bar");
+  const selectedCards = document.querySelectorAll(".lens-card.active");
+
+  // Hide if nothing selected
+  if (selectedCards.length === 0) {
+    lensBar.classList.add("hidden");
+    return;
+  }
+
+  // Build selected names from <strong>
+  const lensTags = Array.from(selectedCards).map((card, index) => {
+    const name = card.querySelector("strong")?.textContent.trim() || "Unknown";
+    return `<span class="lens-tag" data-index="${index}">${name} <span class="remove-btn" data-index="${index}">✖</span></span>`;
+  });
+
+  lensBar.innerHTML = lensTags.join("");
+  lensBar.classList.remove("hidden");
+
+  // Hook up remove button
+  lensBar.querySelectorAll(".remove-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const name = btn.parentElement.textContent.trim().replace("✖", "");
+      const matchingCard = Array.from(
+        document.querySelectorAll(".lens-card"),
+      ).find(
+        (card) =>
+          card.querySelector("strong")?.textContent.trim() === name.trim(),
+      );
+      console.log(name);
+      if (matchingCard) {
+        matchingCard.classList.remove("active");
+        updateLensBar(); // refresh
+      }
+    });
+  });
+}
+
+selectLenses(["helga", "otter", "whitmore"]);
+updateLensBar();
