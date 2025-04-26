@@ -141,11 +141,7 @@ textarea {
     line-height: 1.5; /* Improve readability */
 }
 textarea:focus {
-    outline: none;
-    border-color: var(--bg-button-accent); /* Highlight focus */
-    box-shadow:
-        0 0 0 2px rgba(244, 122, 46, 0.3),
-        var(--shadow-textarea-inset); /* Focus ring + inset */
+    outline-color: var(--bg-button-accent);
 }
 
 button {
@@ -800,6 +796,7 @@ footer {
     line-height: 1.4;
     flex-grow: 1; /* Push button to bottom */
 }
+
 .token-card button {
     margin-top: auto; /* Push to bottom */
     background: var(--bg-button-dark);
@@ -813,6 +810,18 @@ footer {
     background: #4a3a30; /* Darker shade on hover */
 }
 
+.buy-token-button {
+    margin-top: auto; /* Push to bottom */
+    background: var(--bg-button-dark);
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem; /* Slightly larger padding */
+    font-size: 1rem;
+    font-weight: 500; /* Medium weight */
+}
+.buy-token-button:hover {
+    background: #4a3a30; /* Darker shade on hover */
+}
 /* Shared Token Image and Why Tokens section */
 .shared-token-img {
     width: 180px; /* Adjust size */
@@ -887,6 +896,26 @@ footer {
     gap: 2rem; /* Add gap between sidebar and output */
 }
 
+.reflection-item {
+    /* Common style for all reflection items */
+    display: block;
+    width: 100%;
+    background: var(--bg-section-medium);
+    border: 1px solid var(--border-light); /* Add subtle border */
+    padding: 0.6rem 0.8rem; /* Adjusted padding */
+    margin-bottom: 0.5rem;
+    text-align: left;
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition:
+        background 0.2s,
+        border-color 0.2s,
+        font-weight 0.2s;
+    color: var(--text-dark); /* Ensure text color */
+}
+
 /* --- Sidebar --- */
 #sidebar {
     width: 250px;
@@ -923,17 +952,13 @@ footer {
 .sidebar-button:hover {
     background: var(--bg-section-light);
     border-color: var(--border-medium);
-    font-weight: 600; /* Use weight instead of brightness */
 }
 
 .sidebar-button.active {
-    /* Style for the selected dream */
-    background: var(--bg-navbar); /* Use navbar bg for active */
-    border-color: var(--bg-button-accent);
-    font-weight: 600;
-    color: var(--text-heading);
+    border-left: 4px solid #c29b5f; /* warm golden-brown */
+    padding-left: 12px; /* extra padding so text stays aligned */
+    font-weight: bold;
 }
-
 .sidebar-button.create-button {
     /* Specific style for Create button */
     background: var(--bg-button-journal-create); /* Use specific variable */

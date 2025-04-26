@@ -26,8 +26,6 @@ const logoutOption = document.getElementById("logout-option");
 const creditCountEl = document.getElementById("credit-count");
 const journalNavItem = document.getElementById("journal-nav-item"); // <-- ADD
 
-let isShrunk = false;
-
 /* ---------------- UI & Auth ---------------- */
 function updateUserUI(session) {
   if (session?.user) {
@@ -84,6 +82,7 @@ function updateUserUI(session) {
       // Add check to ensure element exists
       journalNavItem.style.display = "none";
     }
+    if (creditCountEl) creditCountEl.style.display = "none";
   }
 }
 
@@ -96,8 +95,10 @@ async function fetchUserCredits(userId) {
 
   if (!error && data?.credits != null && creditCountEl) {
     creditCountEl.textContent = data.credits;
+    creditCountEl.style.display = "inline-block";
   } else {
     console.warn("Could not fetch user credits:", error);
+    if (creditCountEl) creditCountEl.style.display = "none";
   }
 }
 
@@ -211,6 +212,7 @@ window.closeModal = function () {
   alert("Thank you! Your dream is being interpreted.");
 };
 
+let isShrunk = false;
 window.addEventListener("scroll", () => {
   const nav = document.querySelector(".navbar");
   const scrollY = window.scrollY;
@@ -307,23 +309,85 @@ submitBtn.addEventListener("click", async () => {
   }
 });
 
-/* ---------------- Stripe Checkout ---------------- */
-document.getElementById("buy-10").addEventListener("click", async () => {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+const buyButtons = document.querySelectorAll(".buy-token-button");
 
-  const res = await fetch("/.netlify/functions/create-checkout", {
-    method: "POST",
-    body: JSON.stringify({ priceId: "price_1RH3rARXMCF7HbNeDG5a0icL" }),
-    headers: {
-      "Content-Type": "application/json",
-      "x-user-email": session.user.email,
-    },
+buyButtons.forEach((button) => {
+  /* ---------------- Stripe Checkout ---------------- */
+  button.addEventListener("click", async () => {
+    const priceId = button.dataset.priceId;
+    if (!priceId) {
+      console.error("Button is missing data-price-id attribute.");
+      alert("Something went wrong. Cannot proceed with purchase.");
+      return;
+    }
+
+    // const {
+    //   data: { session },
+    // } = await supabase.auth.getSession();
+
+    // const res = await fetch("/.netlify/functions/create-checkout", {
+    //   method: "POST",
+    //   body: JSON.stringify({ priceId }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "x-user-email": session.user.email,
+    //   },
+    // });
+
+    // const { url } = await res.json();
+    // window.location.href = url;
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      // User is NOT logged in - trigger sign-in
+      showToast("Please sign in to purchase tokens."); // Optional feedback
+      await supabase.auth.signInWithOAuth({ provider: "google" });
+      // Note: The page will redirect for OAuth. The purchase flow
+      // would need to be re-initiated by the user after login.
+      // A more advanced flow could store the intended purchase in
+      // localStorage and resume after login, but this is simpler.
+    } else {
+      // User IS logged in - proceed to checkout
+      try {
+        const res = await fetch("/.netlify/functions/create-checkout", {
+          method: "POST",
+          body: JSON.stringify({ priceId: priceId }), // Use the dynamic priceId
+          headers: {
+            "Content-Type": "application/json",
+            // Ensure the user email is correctly passed if needed by the function
+            // You might need to adjust how the email is retrieved based on your function's needs
+            "x-user-email": session.user.email, // Pass user email if needed by backend
+            // Consider passing user ID too if your function uses it
+            // "x-user-id": session.user.id
+          },
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(
+            errorData.message ||
+              `Checkout creation failed with status: ${res.status}`,
+          );
+        }
+
+        const { url } = await res.json();
+        if (url) {
+          window.location.href = url; // Redirect to Stripe
+        } else {
+          throw new Error("Checkout URL not received from server.");
+        }
+      } catch (error) {
+        console.error("Checkout Error:", error);
+        showToast(`Error: ${error.message || "Could not initiate purchase."}`);
+        alert(
+          "Something went wrong initiating the purchase. Please try again.",
+        );
+      }
+    }
   });
-
-  const { url } = await res.json();
-  window.location.href = url;
 });
 
 signInBtn?.addEventListener("click", async () => {

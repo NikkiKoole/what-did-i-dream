@@ -1,5 +1,18 @@
 // src/journal.js
 document.addEventListener("DOMContentLoaded", () => {
+  let isShrunk = false;
+  window.addEventListener("scroll", () => {
+    const nav = document.querySelector(".navbar");
+    const scrollY = window.scrollY;
+    if (!isShrunk && scrollY > 150) {
+      nav.classList.add("shrink");
+      isShrunk = true;
+    } else if (isShrunk && scrollY < 10) {
+      nav.classList.remove("shrink");
+      isShrunk = false;
+    }
+  });
+
   const personaImageMap = {
     "Dr. Helga Stein": "images/circles/helga.jpg",
     "White Otter": "images/circles/otter.jpg",
@@ -102,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <div class="section">
                 <h2>Reflection Questions</h2>
-                <ul>${data.reflection.map((r) => `<li>${r}</li>`).join("")}</ul>
+                <ul>${data.reflection.map((r) => `<li class="reflection-item">${r}</li>`).join("")}</ul>
             </div>
 
             <div class="section">
