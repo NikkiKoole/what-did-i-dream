@@ -10,14 +10,6 @@
         />
         <link rel="stylesheet" href="src/style.css" />
         <style>
-            /* body {
-                font-family: Georgia, serif;
-                background: #f4f1ee;
-                color: #333;
-                padding: 2rem;
-                margin: auto;
-            } */
-
             h1 {
                 font-size: 2rem;
                 margin-bottom: 1rem;
@@ -25,7 +17,7 @@
             }
 
             .section {
-                background: #fff;
+                background: #fffdf9;
                 border-radius: 10px;
                 box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
                 padding: 1.5rem;
@@ -51,7 +43,6 @@
             .persona-block {
                 margin-bottom: 1.5rem;
             }
-
             .persona-block h3 {
                 font-weight: bold;
                 font-size: 1.1rem;
@@ -85,6 +76,7 @@
             }
 
             #app {
+                padding: 30px;
                 display: flex;
                 align-items: flex-start;
                 max-width: 1000px;
@@ -92,7 +84,7 @@
             }
 
             #sidebar {
-                width: 200px;
+                width: 250px;
                 padding-right: 1rem;
                 flex-shrink: 0;
             }
@@ -100,12 +92,15 @@
             #sidebar button {
                 display: block;
                 width: 100%;
-                background: #eee;
+
+                background: var(--bg-section-medium);
+
                 border: none;
                 padding: 0.5rem;
                 margin-bottom: 0.5rem;
                 text-align: left;
-                font-family: Georgia, serif;
+
+                font-family: var(--font-primary);
                 font-size: 0.95rem;
                 border-radius: 6px;
                 cursor: pointer;
@@ -113,9 +108,20 @@
             }
 
             #sidebar button:hover {
-                background: #ddd;
+                background: var(--bg-section-light);
+                font-weight: 900;
+                filter: brightness(0.9);
             }
-
+            #sidebar button#create-new-dream-btn {
+                background: var(--bg-button-accent);
+                margin-bottom: 2em;
+                color: white;
+            }
+            #sidebar button#create-new-dream-btn:hover {
+            }
+            #sidebar a {
+                text-decoration: none;
+            }
             #output {
                 flex: 1;
             }
@@ -172,43 +178,19 @@
                     What did I dream?
                 </div></a
             >
-            <nav>
-                <ul>
-                    <li><a href="/index.html#about">How It Works</a></li>
-                    <li><a href="/index.html#lenses">Lenses</a></li>
-                    <li><a href="/index.html#pricing">Pricing</a></li>
-                    <li id="journal-nav-item">
-                        <a href="/journal.html">Journal</a>
-                    </li>
-                </ul>
-            </nav>
-            <div class="user-menu-wrapper">
-                <div id="credit-count"></div>
-                <div class="user-circle" id="user-menu">
-                    <span id="user-initials" style="display: none"></span>
-                    <img
-                        id="user-avatar"
-                        src="images/user-icon.svg"
-                        alt="User"
-                    />
-                </div>
-                <div
-                    class="user-dropdown"
-                    id="user-dropdown"
-                    style="display: none"
-                >
-                    <ul>
-                        <li id="login-option">Sign In</li>
-                        <li id="logout-option" style="display: none">
-                            Sign Out
-                        </li>
-                    </ul>
-                </div>
-            </div>
         </header>
 
         <div id="app">
             <div id="mobileSelectorWrapper">
+                <a href="/index.html#dream-input">
+                    <button
+                        id="create-new-dream-btn"
+                        class="sidebar-button create-button"
+                        onclick="createNewDreamEntry()"
+                    >
+                        + Create New Entry
+                    </button></a
+                >
                 <select id="dreamSelector"></select>
             </div>
             <div id="sidebar"></div>
@@ -239,13 +221,22 @@
 
             function renderSidebar(dreams) {
                 const sidebar = document.getElementById("sidebar");
-                sidebar.innerHTML = dreams
+
+                const newEntryButtonHTML = `
+                  <a href="/index.html#dream-input">
+                                <button id="create-new-dream-btn" class="sidebar-button create-button" onclick="createNewDreamEntry()">
+                                    + Create New Entry
+                                </button></a>
+                            `;
+
+                const dreamButtonsHTML = dreams
                     .map(
                         (d, i) =>
                             `<button onclick="renderDream(${i})">${d.dream_title}</button>`,
                     )
                     .join("");
 
+                sidebar.innerHTML = newEntryButtonHTML + dreamButtonsHTML;
                 // Also update the mobile dropdown
                 const select = document.getElementById("dreamSelector");
                 select.innerHTML = dreams

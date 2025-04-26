@@ -343,11 +343,11 @@ document.getElementById("random-lenses").addEventListener("click", () => {
   // showToast("Fate decided:");
 
   // Select the random three and collect names from <strong>
-  const names = randomThree.map((card) => {
-    const nameEl = card.querySelector("strong");
-    return nameEl ? nameEl.textContent.trim() : "Unknown";
-  });
-  showToast("Fate decided: " + names.join(", "));
+  // const names = randomThree.map((card) => {
+  //   const nameEl = card.querySelector("strong");
+  //   return nameEl ? nameEl.textContent.trim() : "Unknown";
+  // });
+  // showToast("Fate decided: " + names.join(", "));
 
   // Update the floating lens bar
   updateLensBar();
