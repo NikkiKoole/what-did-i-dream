@@ -10,6 +10,7 @@
     --card-text-inactive: #9e8f7d;
     --bg-button-dark: #2c1e16;
     --bg-button-accent: #f47a2e; /* Orange submit button */
+    --bg-button-journal-create: #f47a2e; /* Explicitly define for journal create btn */
     --bg-filter-idle: #f3eae1;
     --bg-filter-hover: #e5d8ca;
     --bg-modal-overlay: rgba(0, 0, 0, 0.6);
@@ -19,15 +20,18 @@
     --text-light: #fff;
     --text-heading: #2c1e16;
     --text-link: #2c1e16;
-    --text-footer: #e0d6cc; /* Lighter text for footer links */
+    --text-footer: #e0d6cc;
 
     --border-light: #ddd5cc;
     --border-medium: #ccc;
     --border-dark: #2c1e16;
+    --border-blockquote: #ddd; /* Journal blockquote border */
 
     --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.05);
     --shadow-medium: 0 8px 16px rgba(0, 0, 0, 0.1);
     --shadow-modal: 0 5px 15px rgba(0, 0, 0, 0.2);
+    --shadow-journal-section: 0 3px 6px rgba(0, 0, 0, 0.08); /* Journal section shadow */
+    --shadow-textarea-inset: inset 0 1px 2px rgba(0, 0, 0, 0.05); /* Journal textarea shadow */
 
     --accent-purple: #2c1e16; /* Checkbox */
     --lens-analytical: linear-gradient(to right, #a0c4ff, #9adcff);
@@ -42,12 +46,12 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box; /* Apply box-sizing universally */
+    box-sizing: border-box;
 }
 
 html {
-    scroll-behavior: smooth; /* Smooth scrolling for anchor links */
-    scroll-padding-top: 80px; /* Adjust scroll position for fixed navbar */
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Adjust for fixed navbar */
 }
 
 body {
@@ -56,7 +60,7 @@ body {
     background: var(--bg-main);
     color: var(--text-dark);
     line-height: 1.6;
-    font-size: 16px; /* Base font size */
+    font-size: 16px;
 }
 
 h1,
@@ -65,21 +69,21 @@ h3,
 strong {
     font-weight: 600;
     color: var(--text-heading);
-    line-height: 1.3; /* Slightly tighter line height for headings */
+    line-height: 1.3;
 }
 
 h1 {
     font-size: clamp(2rem, 5vw, 2.5rem);
     margin-bottom: 1rem;
-} /* Responsive h1 */
+}
 h2 {
     font-size: clamp(1.75rem, 4vw, 2rem);
     margin-bottom: 1.5rem;
-} /* Responsive h2 */
+}
 h3 {
     font-size: clamp(1.25rem, 3vw, 1.4rem);
     margin-bottom: 1rem;
-} /* Responsive h3 */
+}
 
 p {
     margin-bottom: 1.5rem;
@@ -102,7 +106,62 @@ img {
     display: block;
 }
 
-/* --- Navbar --- */
+ul {
+    /* General list styling */
+    padding-left: 1.25rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem; /* Added default bottom margin */
+}
+
+li {
+    /* General list item styling */
+    margin-bottom: 0.5rem; /* Spacing between items */
+}
+
+blockquote {
+    /* General blockquote styling */
+    margin: 0.5rem 0 1.5rem; /* Adjusted margin */
+    padding-left: 1rem;
+    border-left: 3px solid var(--border-blockquote);
+    color: var(--text-muted); /* Use variable */
+    font-style: italic;
+}
+
+textarea {
+    /* General textarea styling */
+    width: 100%; /* Default to full width */
+    padding: 0.75rem;
+    border: 1px solid var(--border-medium);
+    border-radius: 6px;
+    font-family: var(--font-primary); /* Inherit font */
+    font-size: 1rem;
+    resize: vertical;
+    box-shadow: var(--shadow-textarea-inset);
+    background: var(--bg-section-light); /* Lighter background */
+    line-height: 1.5; /* Improve readability */
+}
+textarea:focus {
+    outline: none;
+    border-color: var(--bg-button-accent); /* Highlight focus */
+    box-shadow:
+        0 0 0 2px rgba(244, 122, 46, 0.3),
+        var(--shadow-textarea-inset); /* Focus ring + inset */
+}
+
+button {
+    /* Basic button reset/styling */
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid transparent;
+    transition:
+        background-color 0.2s ease,
+        transform 0.1s ease;
+}
+
+/* --- Navbar (Shared) --- */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -120,30 +179,25 @@ img {
 
 .navbar.shrink {
     padding: 0.6rem 2rem;
-    background-color: rgba(
-        255,
-        245,
-        234,
-        0.97
-    ); /* Slightly more opaque when shrunk */
+    background-color: rgba(255, 245, 234, 0.97);
     box-shadow: var(--shadow-light);
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 0.75rem; /* Increased gap */
+    gap: 0.75rem;
     font-weight: 600;
     font-size: 1.25rem;
     transition: font-size var(--transition-medium);
-    color: var(--text-heading); /* Ensure logo text color */
+    color: var(--text-heading);
 }
 .navbar.shrink .logo {
     font-size: 1.1rem;
 }
 
 .navbar .ball {
-    height: 45px; /* Default size */
+    height: 45px;
     transition: height var(--transition-medium);
 }
 .navbar:not(.shrink) .ball {
@@ -151,6 +205,7 @@ img {
 }
 
 nav ul {
+    /* Index page specific nav */
     list-style: none;
     display: flex;
     gap: 1.5rem;
@@ -167,554 +222,21 @@ nav a:hover {
     color: var(--text-muted);
 }
 
-/* --- Hero Section --- */
-.hero {
-    text-align: center;
-    padding: 5rem 2rem 4rem; /* Adjusted padding */
-    background: var(--bg-section-light);
-}
-.hello-user {
-    font-size: 4rem;
-    margin-top: 1rem;
-    color: #6a584861;
-    font-style: italic;
-}
-.hero .sub {
-    font-style: italic;
-    color: var(--text-muted);
-    margin: 0 auto 2.5rem; /* Center and add margin */
-    max-width: 600px; /* Limit width */
-    font-size: 1.1rem;
-}
-
-/* --- Dream Input --- */
-.dream-input-group {
-    display: flex;
-    flex-direction: column; /* Stack vertically by default */
-    max-width: 600px;
-    margin: 0 auto 2.5rem;
-    gap: 1rem; /* Space between textarea and button */
-}
-
-.dream-input-group textarea {
-    width: 100%; /* Full width */
-    height: 250px;
-    padding: 1rem;
-    border: 2px solid var(--border-light);
-    border-radius: 8px;
-    font-size: 1rem;
-    font-family: var(--font-primary);
-    background: var(--bg-card);
-    resize: vertical; /* Allow vertical resize */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1) inset;
-}
-
-.dream-input-group textarea:focus {
-    outline: none;
-    border: 2px solid var(--border-light);
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1) inset;
-}
-
-#submit-dream {
-    background: var(--bg-button-accent);
-    color: var(--text-light);
-    border: none;
-    border-radius: 8px;
-    padding: 0.9rem 1.5rem; /* Make button substantial */
-    font-size: 1.05rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: var(--font-primary);
-    transition: background-color var(--transition-fast);
-    width: 100%; /* Full width on mobile */
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-    transition:
-        background-color 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-#submit-dream:hover {
-    background: #dc6a1d; /* Darker shade on hover */
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
-}
-#submit-dream:active {
-    transform: translateY(0px); /* Bring it back down slightly */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Smaller shadow */
-    background-color: #e0601b; /* Even darker shade when pressed */
-}
-
-.promo-banner {
-    background: #fff5ea;
-    color: #2c1e16;
-    font-size: 1rem;
-    text-align: center;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid #e0d2c0;
-}
-.promo-banner strong {
-    font-weight: 600;
-}
-/* --- Lens Picker --- */
-.lens-explainer {
-    background: #fffdf9;
-    border: 1px solid #e8e0d8;
-    border-radius: 12px;
-    padding: 1.5rem;
-    max-width: 700px;
-    margin: 2rem auto;
-    margin-top: 0;
-    text-align: left;
-    font-size: 1rem;
-    color: #3b2c23;
-}
-
-.lens-explainer h3 {
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
-    color: #2c1e16;
-}
-
-.lens-explainer ul {
-    list-style: none;
-    padding-left: 1rem;
-    margin: 1rem 0;
-}
-
-.lens-explainer li::before {
-    content: "☽";
-    color: #8c7363;
-    margin-right: 0.5rem;
-}
-
-/* --- Info Block --- */
-.info-block {
-    padding: 4rem 2rem;
-    background: var(--bg-section-medium);
-    text-align: center;
-}
-.subtext {
-    font-size: 1rem;
-    color: #6a584b;
-    margin-top: -0.5rem;
-    margin-bottom: 2rem;
-}
-#lenses {
-    background: var(--bg-section-light);
-} /* Alternate bg */
-
-.pricing-section {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: #fefaf4;
-}
-
-.token-options {
-    display: grid;
-    gap: 2rem;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    max-width: 900px;
-    margin: 2rem auto 0;
-}
-
-.token-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-    position: relative;
-    overflow: hidden;
-}
-
-.shared-token-img {
-    width: 220px;
-    margin: 1rem auto 2rem;
-    opacity: 0.9;
-    border-radius: 50%;
-}
-
-.token-card p {
-    font-size: 1rem;
-    color: #6a584b;
-}
-.why-tokens {
-    background: #fffdf9;
-    border: 1px solid #e7e0d5;
-    padding: 1.5rem 2rem;
-    border-radius: 12px;
-    max-width: 600px;
-    margin: 2rem auto;
-    text-align: center;
-}
-
-.why-tokens h4 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-    color: #2c1e16;
-}
-
-.why-tokens p {
-    font-size: 1rem;
-    color: #6a584b;
-    line-height: 1.5;
-}
-.token-card button {
-    margin-top: 1rem;
-    background: #2c1e16;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.95rem;
-}
-.token-card p {
-    display: block;
-    font-size: 2.5rem; /* Make the price large */
-    font-weight: 600;
-    color: var(--text-heading);
-    line-height: 1.1;
-    margin-bottom: 0.25rem;
-}
-.token-card h4 {
-    display: block;
-    font-size: 2.5rem; /* Make the price large */
-    font-weight: 600;
-    color: var(--text-heading);
-    line-height: 1.1;
-    margin-bottom: 0.25rem;
-}
-.token-card .caption {
-    font-size: 0.95rem;
-    color: #6a584b;
-    margin: 0.5rem 0 1rem;
-    line-height: 1.4;
-}
-#pricing {
-    background: var(--bg-section-light);
-}
-
-/* --- Lens Filter Buttons --- */
-
-/* --- Lens Grid & Cards --- */
-.lens-grid {
-    display: grid; /* Use grid for better alignment */
-    grid-template-columns: repeat(
-        auto-fit,
-        minmax(240px, 1fr)
-    ); /* Responsive columns */
-    gap: 2rem;
-    justify-content: center;
-    padding: 2rem 0;
-    max-width: 1200px; /* Max width for the grid */
-    margin: 0 auto;
-}
-
-.lens-card {
-    cursor: pointer;
-    background: var(--bg-card-inactive);
-    border-radius: 16px;
-    box-shadow: var(--shadow-light);
-    padding: 1.5rem;
-    transition:
-        transform var(--transition-medium),
-        box-shadow var(--transition-medium),
-        opacity var(--transition-medium);
-    text-align: center;
-    position: relative;
-    overflow: hidden; /* Hide overflowing pseudo-element */
-    display: flex; /* Use flexbox for vertical layout */
-    flex-direction: column;
-    opacity: 1; /* Start visible for filter */
-}
-
-.lens-card::before {
-    content: "";
-    display: block;
-    height: 6px;
-    border-top-left-radius: 16px; /* Match card radius */
-    border-top-right-radius: 16px;
-    margin: -1.5rem -1.5rem 1rem; /* Position at top */
-    background: var(--border-light); /* Default color */
-    filter: grayscale();
-}
-
-/* Apply specific gradient based on data-type */
-.lens-card[data-type="analytical"]::before {
-    background: var(--lens-analytical);
-}
-.lens-card[data-type="mystical"]::before {
-    background: var(--lens-mystical);
-}
-.lens-card[data-type="synthetic"]::before {
-    background: var(--lens-synthetic);
-}
-
-.lens-card:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-medium);
-}
-
-.lens-card img {
-    width: 100px; /* Slightly smaller images */
-    height: 100px;
-    border-radius: 50%; /* Make images circular */
-    object-fit: cover; /* Ensure images cover the area */
-    margin: 0 auto 1rem;
-    /* Keep JS transition for 3D effect */
-    transition: transform 0.3s ease;
-    filter: sepia();
-}
-
-.lens-card strong {
-    /* Changed from h3 for semantics */
-    font-family: var(--font-primary);
-    font-weight: 600;
-    font-size: 1.15rem;
-    margin-top: 0; /* Remove top margin */
-    margin-bottom: 0.25rem;
-
-    color: var(--card-text-inactive);
-}
-
-.lens-card em {
-    font-size: 0.9rem;
-
-    color: var(--card-text-inactive);
-    font-style: italic;
-    display: block;
-    margin-bottom: 0.75rem;
-}
-
-.lens-card p {
-    font-size: 0.95rem;
-    line-height: 1.5; /* Adjusted line height */
-
-    color: var(--card-text-inactive);
-    flex-grow: 1; /* Allow p to take remaining space */
-    margin-bottom: 0; /* Remove bottom margin */
-}
-
-.lens-card.active {
-    background: var(--bg-card);
-}
-.lens-card.active strong {
-    color: var(--text-heading);
-}
-.lens-card.active em {
-    color: var(--text-muted);
-}
-.lens-card.active p {
-    color: var(--text-dark);
-}
-.lens-card.active::before {
-    filter: none;
-}
-.lens-card.active img {
-    filter: none;
-}
-@keyframes shake {
-    0% {
-        transform: translateX(0);
-    }
-    25% {
-        transform: translateX(-5px);
-    }
-    50% {
-        transform: translateX(5px);
-    }
-    75% {
-        transform: translateX(-5px);
-    }
-    100% {
-        transform: translateX(0);
-    }
-}
-
-.lens-bar {
-    z-index: 10;
-
-    padding: 0.75rem 1.25rem;
-    border-radius: 0.75rem;
-    max-width: 800px;
-    margin: 1rem auto;
-
-    font-size: 0.9rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.3s ease;
-}
-
-.lens-tag {
-    background: #f1e9dc;
-    border-radius: 999px;
-    padding: 0.3rem 0.75rem;
-    font-weight: 500;
-    font-size: 0.85rem;
-    color: #3b3228;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-}
-
-.lens-tag .remove-btn {
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 0.85rem;
-    color: #7c6b58;
-}
-
-.hidden {
-    display: none;
-}
-
-.shake {
-    animation: shake 0.4s ease;
-}
-.random-btn {
-    margin-top: 1rem;
-    background-color: #f4e4cc;
-    border: 1px solid #d8c2a6;
-    color: #3b3228;
-    padding: 0.5rem 1.25rem;
-    font-size: 0.95rem;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.random-btn:hover {
-    background-color: #e9d5bb;
-}
-/* --- About Section --- */
-#about {
-    text-align: center;
-    padding: 4rem 2rem;
-}
-
-#about p {
-    max-width: 700px;
-    margin: 0 auto 2rem;
-    font-size: 1.1rem;
-}
-
-#about h3 {
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
-}
-
-.about-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 auto 2rem;
-    max-width: 650px; /* Slightly narrower */
-    text-align: left;
-}
-
-.about-list li {
-    margin: 0.75rem 0;
-    font-size: 1.05rem;
-    position: relative;
-    padding-left: 1.5rem; /* More space for pseudo-element */
-}
-
-.about-list li::before {
-    content: "☾"; /* Use a symbol */
-    position: absolute;
-    left: 0;
-    top: 2px; /* Adjust vertical alignment */
-    color: var(--text-muted);
-    font-size: 1rem;
-    line-height: 1;
-}
-
-.about-list li strong {
-    font-weight: 600;
-}
-
-/* --- Pricing Section --- */
-
-/* --- Footer --- */
-footer {
-    background: var(--bg-button-dark);
-    color: var(--text-footer); /* Use lighter text color */
-    padding: 3rem 2rem 2rem; /* More padding top */
-    text-align: center;
-}
-
-.footer-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Center logo */
-    gap: 0.75rem;
-    font-size: 1.3rem; /* Slightly smaller */
-    font-weight: 600;
-    margin-bottom: 2rem; /* More space below logo */
-    color: var(--text-light); /* Brighter color for logo text */
-}
-.footer-logo .ball {
-    height: 35px; /* Smaller logo icon in footer */
-}
-
-.footer-columns {
-    display: flex;
-    flex-wrap: wrap; /* Allow wrapping on small screens */
-    justify-content: center;
-    gap: 3rem; /* Space between columns */
-    margin-bottom: 2rem;
-}
-
-.footer-columns div {
-    text-align: center; /* Center text within columns */
-}
-@media (min-width: 500px) {
-    .footer-columns div {
-        text-align: left; /* Align left on larger screens */
-    }
-}
-
-.footer-columns p strong {
-    color: var(--text-light); /* Brighter heading color */
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-.footer-columns a {
-    color: var(--text-footer); /* Use footer text color */
-    font-size: 0.9rem;
-    display: block;
-    margin: 0.3rem 0;
-    text-decoration: none;
-}
-.footer-columns a:hover {
-    color: var(--text-light);
-    text-decoration: underline;
-}
-
-.tagline {
-    font-style: italic;
-    font-size: 0.9rem;
-    color: var(--text-muted); /* Muted color for tagline */
-    margin-top: 2rem;
-    margin-bottom: 0.5rem;
-}
-.copyright {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-top: 1rem;
-    margin-bottom: 0;
-}
-
-/* --- Sign-in Modal --- */
-
+/* --- User Menu (Shared in Navbar) --- */
 .user-menu-wrapper {
     position: relative;
-    display: inline-block;
+    display: flex; /* Align items */
+    align-items: center;
+    gap: 0.75rem; /* Space between credits and circle */
+}
+
+#credit-count {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background-color: #ede4d9; /* Subtle background */
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
 }
 
 .user-circle {
@@ -732,79 +254,840 @@ footer {
     font-size: 0.85rem;
     color: #2c1e16;
 }
-
 .user-circle:hover {
     background: #d6c6b6;
 }
-
 .user-circle img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
 }
-
 .user-dropdown {
     position: absolute;
     right: 0;
-    top: 50px;
+    top: 50px; /* Position below the circle */
     background: white;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-light);
     border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 10;
+    box-shadow: var(--shadow-medium);
+    z-index: 1010; /* Ensure it's above other content */
     min-width: 120px;
 }
-
 .user-dropdown ul {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 0.25rem 0; /* Small padding top/bottom */
 }
-
 .user-dropdown li {
-    padding: 0.75rem 1rem;
+    padding: 0.6rem 1rem;
     cursor: pointer;
     font-size: 0.95rem;
+    color: var(--text-dark);
+    margin-bottom: 0; /* Override default li margin */
 }
-
 .user-dropdown li:hover {
-    background: #f3eae1;
+    background: var(--bg-filter-idle);
 }
 
+/* --- Footer (Shared) --- */
+footer {
+    background: var(--bg-button-dark);
+    color: var(--text-footer);
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+}
+.footer-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: var(--text-light);
+}
+.footer-logo .ball {
+    height: 35px;
+}
+.footer-columns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem 3rem; /* Row and column gap */
+    margin-bottom: 2rem;
+    max-width: 800px; /* Limit width */
+    margin-left: auto;
+    margin-right: auto;
+}
+.footer-columns div {
+    text-align: center;
+}
+@media (min-width: 500px) {
+    .footer-columns div {
+        text-align: left;
+    }
+}
+.footer-columns p strong {
+    color: var(--text-light);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+.footer-columns a {
+    color: var(--text-footer);
+    font-size: 0.9rem;
+    display: block;
+    margin: 0.3rem 0;
+    text-decoration: none;
+}
+.footer-columns a:hover {
+    color: var(--text-light);
+    text-decoration: underline;
+}
+.tagline {
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+}
+.copyright {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+
+/* ======================================== */
+/* --- INDEX PAGE Specific Styles --- */
+/* ======================================== */
+
+/* --- Hero Section --- */
+.hero {
+    text-align: center;
+    padding: 5rem 2rem 4rem;
+    background: var(--bg-section-light);
+}
+.hello-user {
+    font-size: 3rem; /* Slightly smaller */
+    margin-bottom: 1rem; /* Added margin */
+    color: #6a584861;
+    font-style: italic;
+}
+.hero .sub {
+    font-style: italic;
+    color: var(--text-muted);
+    margin: 0 auto 2.5rem;
+    max-width: 600px;
+    font-size: 1.1rem;
+}
+
+/* --- Dream Input --- */
+.dream-input-group {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 0 auto 2.5rem;
+    gap: 1rem;
+}
+.dream-input-group textarea {
+    /* Specific textarea overrides */
+    height: 250px;
+    border: 2px solid var(--border-light);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1) inset;
+}
+.dream-input-group textarea:focus {
+    border: 2px solid var(--border-light); /* Keep border consistent */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1) inset; /* Keep inset consistent */
+}
+
+#submit-dream {
+    background: var(--bg-button-accent);
+    color: var(--text-light);
+    border: none;
+    padding: 0.9rem 1.5rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    width: 100%;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+#submit-dream:hover {
+    background: #dc6a1d;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+#submit-dream:active {
+    transform: translateY(0px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #e0601b;
+}
+
+/* --- Promo Banner --- */
+.promo-banner {
+    background: #fff5ea;
+    color: #2c1e16;
+    font-size: 1rem;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e0d2c0;
+    display: flex; /* Use flex for alignment */
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap; /* Allow wrapping */
+}
+.promo-banner strong {
+    font-weight: 600;
+}
+#signin-cta {
+    /* Specific styling for CTA button */
+    background: var(--bg-button-accent);
+    color: white;
+    border: none;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 4px;
+}
+#signin-cta:hover {
+    background: #dc6a1d;
+}
+
+/* --- Buy Button Temp */
+#buy-10 {
+    /* Example button */
+    display: block;
+    margin: 1rem auto;
+    background-color: var(--bg-button-dark);
+    color: white;
+}
+
+/* --- Info Block (Used on Index) --- */
+.info-block {
+    padding: 4rem 2rem;
+    background: var(--bg-section-medium);
+    text-align: center;
+}
+.info-block .subtext {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-top: -0.5rem;
+    margin-bottom: 2rem;
+}
+#lenses {
+    background: var(--bg-section-light);
+} /* Alternate bg */
+#pricing {
+    background: var(--bg-section-light);
+} /* Alternate bg */
+
+/* --- Lens Selection --- */
+#lenses p:first-of-type {
+    /* Target the paragraph before the bar */
+    margin-bottom: 1.5rem;
+    color: var(--text-muted);
+}
+.lens-bar {
+    z-index: 10;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.75rem;
+    max-width: 800px;
+    margin: 1rem auto 2rem; /* Added bottom margin */
+    font-size: 0.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+    background-color: #f7f2ec; /* Subtle background */
+    border: 1px solid var(--border-light);
+}
+.lens-tag {
+    background: #f1e9dc;
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: #3b3228;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid #e5d8ca; /* Subtle border */
+}
+.lens-tag .remove-btn {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem; /* Slightly larger for easier click */
+    color: #9d8c7b;
+    line-height: 1;
+    padding: 0 0.1rem; /* Small padding */
+}
+.lens-tag .remove-btn:hover {
+    color: var(--text-dark);
+}
+.random-btn {
+    margin-left: 0.5rem; /* Space from text */
+    background-color: #f4e4cc;
+    border: 1px solid #d8c2a6;
+    color: #3b3228;
+    padding: 0.3rem 1rem; /* Adjusted padding */
+    font-size: 0.9rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    vertical-align: middle; /* Align with text */
+}
+.random-btn:hover {
+    background-color: #e9d5bb;
+}
+.hidden {
+    display: none;
+}
+.shake {
+    animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    25%,
+    75% {
+        transform: translateX(-4px);
+    }
+    50% {
+        transform: translateX(4px);
+    }
+}
+
+/* --- Lens Grid & Cards --- */
+.lens-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+    justify-content: center;
+    padding: 2rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.lens-card {
+    cursor: pointer;
+    background: var(--bg-card-inactive);
+    border-radius: 16px;
+    box-shadow: var(--shadow-light);
+    padding: 1.5rem;
+    transition:
+        transform var(--transition-medium),
+        box-shadow var(--transition-medium),
+        opacity var(--transition-medium),
+        background-color var(--transition-medium); /* Added background transition */
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    border: 2px solid transparent; /* Add border for active state */
+}
+.lens-card::before {
+    content: "";
+    display: block;
+    height: 6px;
+    border-top-left-radius: 13px; /* Adjust for border */
+    border-top-right-radius: 13px;
+    margin: -1.5rem -1.5rem 1rem;
+    background: var(--border-light);
+    filter: grayscale(80%); /* More pronounced grayscale */
+    transition: filter var(--transition-medium); /* Transition filter */
+}
+.lens-card[data-type="analytical"]::before {
+    background: var(--lens-analytical);
+}
+.lens-card[data-type="mystical"]::before {
+    background: var(--lens-mystical);
+}
+.lens-card[data-type="synthetic"]::before {
+    background: var(--lens-synthetic);
+}
+
+.lens-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-medium);
+}
+.lens-card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 1rem;
+    transition:
+        filter 0.3s ease,
+        transform 0.3s ease; /* Add filter transition */
+    filter: sepia(70%) opacity(85%); /* Apply default filter */
+}
+.lens-card strong {
+    font-size: 1.15rem;
+    margin-bottom: 0.25rem;
+    color: var(--card-text-inactive);
+    transition: color var(--transition-medium);
+}
+.lens-card em {
+    font-size: 0.9rem;
+    color: var(--card-text-inactive);
+    font-style: italic;
+    display: block;
+    margin-bottom: 0.75rem;
+    transition: color var(--transition-medium);
+}
+.lens-card p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--card-text-inactive);
+    flex-grow: 1;
+    margin-bottom: 0;
+    transition: color var(--transition-medium);
+}
+
+/* Active Lens Card State */
+.lens-card.active {
+    background: var(--bg-card);
+
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+.lens-card.active::before {
+    filter: none;
+}
+.lens-card.active img {
+    filter: none;
+}
+.lens-card.active strong {
+    color: var(--text-heading);
+}
+.lens-card.active em {
+    color: var(--text-muted);
+}
+.lens-card.active p {
+    color: var(--text-dark);
+}
+
+/* Lens Explainer */
+.lens-explainer {
+    background: #fffdf9;
+    border: 1px solid #e8e0d8;
+    border-radius: 12px;
+    padding: 2rem; /* Increased padding */
+    max-width: 750px; /* Slightly wider */
+    margin: 3rem auto 0; /* Increased top margin */
+    text-align: left;
+    font-size: 1rem;
+    color: #3b2c23;
+    box-shadow: var(--shadow-light);
+}
+.lens-explainer h3 {
+    font-size: 1.4rem; /* Larger heading */
+    margin-bottom: 1rem;
+    color: #2c1e16;
+    text-align: center; /* Center heading */
+}
+.lens-explainer ul {
+    list-style: none;
+    padding-left: 0.5rem; /* Reduced padding */
+    margin: 1.5rem 0; /* Increased margin */
+}
+.lens-explainer li {
+    position: relative;
+    padding-left: 1.75rem; /* Space for icon */
+    margin-bottom: 0.75rem; /* Spacing */
+}
+.lens-explainer li::before {
+    content: "☾";
+    color: #b5a08d; /* Slightly different color */
+    position: absolute;
+    left: 0;
+    top: 2px;
+    font-size: 1.1rem; /* Larger icon */
+}
+
+/* --- About Section --- */
+#about {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+#about p {
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    font-size: 1.1rem;
+}
+#about h3 {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+.about-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto 2rem;
+    max-width: 650px;
+    text-align: left;
+}
+.about-list li {
+    margin: 0.75rem 0;
+    font-size: 1.05rem;
+    position: relative;
+    padding-left: 1.75rem; /* Consistent padding */
+}
+.about-list li::before {
+    content: "✧"; /* Different symbol */
+    position: absolute;
+    left: 0;
+    top: 3px;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    line-height: 1;
+}
+.about-list li strong {
+    font-weight: 600;
+}
+
+/* --- Pricing Section --- */
+.pricing-section {
+    /* Container for token options */
+    padding-top: 0; /* Removed padding as it's inside .info-block */
+}
+.token-options {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    max-width: 900px; /* Consistent max width */
+    margin: 2rem auto 0;
+    position: relative; /* For positioning the shared image */
+}
+.token-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    text-align: center; /* Center text */
+    border: 1px solid var(--border-light); /* Add subtle border */
+}
+.token-card h4 {
+    font-size: 1.3rem; /* Token amount heading */
+    margin-bottom: 0.25rem;
+    color: var(--text-heading);
+    line-height: 1.2;
+}
+.token-card .price {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--text-heading);
+    line-height: 1.1;
+    margin-bottom: 0.5rem; /* Space below price */
+}
+.token-card .caption {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin: 0.5rem 0 1.5rem; /* More space below caption */
+    line-height: 1.4;
+    flex-grow: 1; /* Push button to bottom */
+}
+.token-card button {
+    margin-top: auto; /* Push to bottom */
+    background: var(--bg-button-dark);
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem; /* Slightly larger padding */
+    font-size: 1rem;
+    font-weight: 500; /* Medium weight */
+}
+.token-card button:hover {
+    background: #4a3a30; /* Darker shade on hover */
+}
+
+/* Shared Token Image and Why Tokens section */
+.shared-token-img {
+    width: 180px; /* Adjust size */
+    margin: -60px auto 1rem; /* Overlap slightly, center */
+    opacity: 0.9;
+    border-radius: 50%;
+    grid-column: 1 / -1; /* Span all columns */
+    position: relative; /* Ensure it's above background */
+    z-index: 5;
+    order: -1; /* Position before cards visually in flow */
+    pointer-events: none; /* Prevent interaction */
+}
+.why-tokens {
+    background: #fffdf9;
+    border: 1px solid #e7e0d5;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    margin: 1rem 0 0; /* Adjust margin */
+    text-align: center;
+    grid-column: 1 / -1; /* Span all columns */
+}
+.why-tokens h4 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-heading);
+}
+.why-tokens p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    max-width: 500px; /* Limit width */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- Toast Notification --- */
+#toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2d2a26;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
+    opacity: 0;
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease; /* Add transform transition */
+    z-index: 1050; /* Ensure above most elements */
+    pointer-events: none;
+    white-space: nowrap; /* Prevent wrapping */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+#toast.show {
+    opacity: 1;
+    transform: translate(-50%, -10px); /* Slide up slightly */
+}
+
+/* ======================================== */
+/* --- JOURNAL PAGE Specific Styles --- */
+/* ======================================== */
+
+/* --- Journal Layout --- */
+.journal-layout {
+    /* Use #app ID for overall container */
+    padding: 30px;
+    display: flex;
+    align-items: flex-start;
+    max-width: 1100px; /* Slightly wider */
+    margin: auto;
+    gap: 2rem; /* Add gap between sidebar and output */
+}
+
+/* --- Sidebar --- */
+#sidebar {
+    width: 250px;
+
+    flex-shrink: 0;
+    position: sticky; /* Make sidebar sticky */
+    top: 100px; /* Adjust based on navbar height */
+    align-self: flex-start; /* Align to top */
+    max-height: calc(100vh - 120px); /* Limit height and allow scrolling */
+    overflow-y: auto; /* Enable vertical scroll if needed */
+    padding: 1em;
+}
+
+.sidebar-button {
+    /* Common style for all sidebar buttons */
+    display: block;
+    width: 100%;
+    background: var(--bg-section-medium);
+    border: 1px solid var(--border-light); /* Add subtle border */
+    padding: 0.6rem 0.8rem; /* Adjusted padding */
+    margin-bottom: 0.5rem;
+    text-align: left;
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition:
+        background 0.2s,
+        border-color 0.2s,
+        font-weight 0.2s;
+    color: var(--text-dark); /* Ensure text color */
+}
+
+.sidebar-button:hover {
+    background: var(--bg-section-light);
+    border-color: var(--border-medium);
+    font-weight: 600; /* Use weight instead of brightness */
+}
+
+.sidebar-button.active {
+    /* Style for the selected dream */
+    background: var(--bg-navbar); /* Use navbar bg for active */
+    border-color: var(--bg-button-accent);
+    font-weight: 600;
+    color: var(--text-heading);
+}
+
+.sidebar-button.create-button {
+    /* Specific style for Create button */
+    background: var(--bg-button-journal-create); /* Use specific variable */
+    color: white;
+    font-weight: 600;
+    margin-bottom: 1.5em; /* More space below */
+    border-color: transparent;
+}
+.sidebar-button.create-button:hover {
+    background: #dc6a1d; /* Darker orange */
+    font-weight: 600; /* Keep weight */
+    border-color: transparent;
+}
+
+#sidebar a {
+    /* Ensure links in sidebar don't have underline */
+    text-decoration: none;
+}
+
+/* --- Main Output Area --- */
+#output {
+    flex: 1; /* Take remaining space */
+    min-width: 0; /* Prevent flex item overflow */
+    padding: 1em;
+}
+
+/* --- Journal Sections --- */
+.section {
+    background: var(--bg-section-light);
+    border-radius: 10px;
+    box-shadow: var(--shadow-journal-section);
+    padding: 1.5rem 2rem; /* Increased horizontal padding */
+    margin-bottom: 2rem;
+}
+.section h1 {
+    /* Title section */
+    font-size: 2rem;
+    margin-bottom: 0; /* Remove margin if it's the only element */
+    color: var(--text-heading); /* Use variable */
+}
+.section h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem; /* More space below h2 */
+    color: #4a3b3b; /* Specific color, maybe use a variable? */
+    padding-bottom: 0.5rem; /* Add space below text */
+    border-bottom: 1px solid var(--border-light); /* Separator */
+}
+.section p,
+.section li {
+    line-height: 1.7; /* Slightly more line height */
+    color: var(--text-dark);
+}
+.section ul {
+    margin-top: 1rem; /* More space above lists */
+}
+
+/* --- Persona Blocks --- */
+.persona-block {
+    margin-bottom: 2rem; /* Increased spacing */
+    padding-bottom: 1.5rem; /* Add padding below */
+    border-bottom: 1px dashed var(--border-light); /* Separator */
+    overflow: hidden; /* Contain float */
+}
+.persona-block:last-child {
+    border-bottom: none; /* Remove border from last block */
+    margin-bottom: 0; /* Remove margin from last block */
+    padding-bottom: 0;
+}
+
+.persona-block h3 {
+    font-weight: bold;
+    font-size: 1.2rem; /* Slightly larger */
+    color: var(--text-muted); /* Muted color for persona name */
+    margin-bottom: 0.5rem; /* More space */
+}
+.persona-image {
+    width: 60px; /* Fixed size */
+    height: 60px;
+    border-radius: 50%;
+    float: right;
+    margin-left: 1.5rem; /* Space from text */
+    margin-bottom: 0.5rem; /* Space below image */
+    border: 2px solid var(--border-light); /* Subtle border */
+}
+.persona-block p {
+    margin-bottom: 0; /* Reset paragraph margin inside block */
+}
+
+/* --- Notes Textarea --- */
+#notes {
+    /* Specific styling for notes textarea */
+    height: 150px;
+    margin-top: 1rem; /* Space above textarea */
+}
+
+/* --- Mobile Selectors (Journal) --- */
+#mobileSelectorWrapper {
+    display: none; /* Hidden by default */
+
+    width: 100%;
+    padding: 1em;
+}
+#dreamSelector {
+    /* Style the dropdown */
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-family: var(--font-primary);
+    border-radius: 6px;
+    border: 1px solid var(--border-medium);
+    background: #fff;
+    margin-top: 0.5rem; /* Space below create button */
+}
+#create-new-dream-btn-mobile {
+    /* Mobile create button */
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+/* Error Message */
+.error-message {
+    color: #b94a48; /* Reddish color for errors */
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+    padding: 1rem;
+    border-radius: 6px;
+}
+#app {
+    display: flex;
+}
+/* ======================================== */
 /* --- Media Queries --- */
+/* ======================================== */
 
-/* Adjust layout for dream input group on medium screens */
-@media (min-width: 640px) {
-    .dream-input-group {
-        flex-direction: row; /* Side-by-side */
-        align-items: flex-end; /* Align button to bottom */
-        gap: 0.75rem;
+/* --- Medium Screens (Tablets, smaller laptops) --- */
+@media (max-width: 992px) {
+    .journal-layout {
+        padding: 20px; /* Reduce padding */
     }
-    .dream-input-group textarea {
-        flex: 1; /* Allow textarea to grow */
-        width: auto; /* Override 100% width */
-    }
-    #submit-dream {
-        width: auto; /* Button width based on content */
-        white-space: nowrap; /* Prevent button text wrapping */
-        flex-shrink: 0; /* Prevent button from shrinking */
+    #sidebar {
+        width: 220px; /* Slightly narrower sidebar */
     }
 }
 
-/* Adjust footer columns */
+/* --- Small Screens (Tablets in portrait, large phones) --- */
 @media (max-width: 768px) {
-    .footer-columns {
-        gap: 1.5rem 2rem; /* Reduce gap */
-    }
     .navbar {
-        padding: 1rem 1.5rem; /* Reduce padding */
+        padding: 1rem 1.5rem;
     }
     .navbar.shrink {
         padding: 0.5rem 1.5rem;
     }
     nav ul {
-        gap: 1rem; /* Smaller gap for nav items */
+        gap: 1rem;
     }
     nav a {
         font-size: 0.95rem;
@@ -818,34 +1101,111 @@ footer {
     .navbar:not(.shrink) .ball {
         height: 45px;
     }
+    #app {
+        display: block;
+    }
+    /* Adjust Journal Layout for Mobile */
+    .journal-layout {
+        flex-direction: column;
+        padding: 15px; /* Further reduce padding */
+        gap: 0; /* Remove gap when stacked */
+    }
+    #sidebar {
+        display: none; /* Hide desktop sidebar */
+        position: static; /* Reset sticky positioning */
+        width: 100%;
+        max-height: none;
+        overflow-y: visible;
+        padding-right: 0;
+    }
+    #mobileSelectorWrapper {
+        display: block; /* Show mobile selector */
+    }
+    #output {
+        width: 100%; /* Ensure output takes full width */
+    }
+    .section {
+        padding: 1rem 1.25rem; /* Reduce section padding */
+    }
+    #notes {
+        height: 120px;
+    } /* Reduce notes height */
+
+    /* Footer adjustments */
+    .footer-columns {
+        gap: 1.5rem 2rem;
+    }
 }
 
+/* --- Extra Small Screens (Phones) --- */
 @media (max-width: 600px) {
     nav ul {
         display: none;
-    } /* Basic mobile: hide nav links */
-    /* Consider implementing a proper mobile menu toggle later */
+    } /* Hide nav links */
     .navbar {
         justify-content: space-between;
-    } /* Ensure logo and button space out */
+    } /* Keep logo and user menu spaced */
+
     .hero {
-        padding-top: 4rem;
-    }
+        padding: 3rem 1rem 2rem;
+    } /* Less padding */
     h1 {
         font-size: 1.8rem;
     }
     h2 {
         font-size: 1.5rem;
     }
+
+    .dream-input-group {
+        flex-direction: column; /* Ensure vertical stack */
+    }
+    #submit-dream {
+        width: 100%; /* Ensure full width */
+    }
+
     .lens-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Single column */
         gap: 1.5rem;
-    } /* Single column */
+    }
     .lens-card {
-        max-width: 350px;
+        max-width: 350px; /* Limit width */
         margin: 0 auto;
-    } /* Center single cards */
-    .pricing-grid {
-        grid-template-columns: 1fr;
+    }
+    .token-options {
+        grid-template-columns: 1fr; /* Single column */
+    }
+    .shared-token-img {
+        width: 150px;
+        margin-top: -50px;
+    }
+
+    .footer-columns {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    .footer-columns div {
+        text-align: center;
+    } /* Center footer text */
+}
+
+/* Adjust layout for dream input group on medium screens + */
+@media (min-width: 641px) {
+    /* Apply only above 640px */
+    .dream-input-group {
+        flex-direction: row; /* Side-by-side */
+        align-items: flex-end; /* Align button to bottom */
+        gap: 0.75rem;
+    }
+    .dream-input-group textarea {
+        flex: 1; /* Allow textarea to grow */
+        width: auto; /* Override 100% width */
+        height: 180px; /* Adjust height for horizontal layout */
+    }
+    #submit-dream {
+        width: auto; /* Button width based on content */
+        white-space: nowrap; /* Prevent button text wrapping */
+        flex-shrink: 0; /* Prevent button from shrinking */
+        align-self: flex-end; /* Align button properly */
+        margin-bottom: 0; /* Remove any bottom margin */
     }
 }
