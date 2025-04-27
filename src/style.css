@@ -9,8 +9,8 @@
     --bg-card-inactive: #f3efe9;
     --card-text-inactive: #9e8f7d;
     --bg-button-dark: #2c1e16;
-    --bg-button-accent: #f47a2e; /* Orange submit button */
-    --bg-button-journal-create: #f47a2e; /* Explicitly define for journal create btn */
+    --bg-button-accent: #fb6530; /* Orange submit button */
+    --bg-button-journal-create: #fb6530; /* Explicitly define for journal create btn */
     --bg-filter-idle: #f3eae1;
     --bg-filter-hover: #e5d8ca;
     --bg-modal-overlay: rgba(0, 0, 0, 0.6);
@@ -413,7 +413,7 @@ footer {
         box-shadow 0.2s ease;
 }
 #submit-dream:hover {
-    background: #dc6a1d;
+    background: #cd5226;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
 }
@@ -503,6 +503,7 @@ footer {
     transition: opacity 0.3s ease;
     background-color: #f7f2ec; /* Subtle background */
     border: 1px solid var(--border-light);
+    border-top: 1px solid var(--border-light); /* top border only now */
 }
 .lens-tag {
     background: #f1e9dc;
@@ -955,7 +956,7 @@ footer {
 }
 
 .sidebar-button.active {
-    border-left: 4px solid #c29b5f; /* warm golden-brown */
+    border-left: 4px solid var(--bg-button-journal-create); /* warm golden-brown */
     padding-left: 12px; /* extra padding so text stays aligned */
     font-weight: bold;
 }
@@ -1105,6 +1106,10 @@ footer {
 
 /* --- Small Screens (Tablets in portrait, large phones) --- */
 @media (max-width: 768px) {
+    .lens-bar {
+        position: sticky;
+        top: 50px; /* instead of top: 0 */
+    }
     .navbar {
         padding: 1rem 1.5rem;
     }

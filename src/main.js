@@ -197,15 +197,18 @@ function selectLenses(lensNames) {
     }
   });
 }
-submitBtn.addEventListener("click", () => {
-  const input = dreamInput.value.trim();
-  const selected = Array.from(checkboxes).filter((i) => i.checked);
-  if (!input || selected.length === 0) {
-    alert("Please enter a dream and choose at least one lens.");
-    return;
-  }
-  signinModal.style.display = "flex";
-});
+// submitBtn.addEventListener("click", () => {
+//   const input = dreamInput.value.trim();
+
+//   const selected = Array.from(document.querySelectorAll(".lens-card.active"));
+//   //console.log(picks);
+//   //const selected = Array.from(checkboxes).filter((i) => i.checked);
+//   if (!input || selected.length === 0) {
+//     alert("Please enter a dream and choose at least one lens.");
+//     return;
+//   }
+//   signinModal.style.display = "flex";
+// });
 
 window.closeModal = function () {
   signinModal.style.display = "none";
@@ -283,31 +286,93 @@ logoutOption.addEventListener("click", async () => {
   if (creditCountEl) creditCountEl.textContent = "";
 });
 
-/* ---------------- Dream Submission ---------------- */
 submitBtn.addEventListener("click", async () => {
   const dreamText = dreamInput.value.trim();
-  const lenses = Array.from(
-    document.querySelectorAll('input[name="lens"]:checked'),
-  ).map((cb) => cb.value);
+  // const lenses = Array.from(
+  //   document.querySelectorAll('input[name="lens"]:checked'),
+  // ).map((cb) => cb.value);
 
+  let shakeFunc = () => {
+    submitBtn.classList.add("shake");
+
+    // Optional: remove shake class after animation ends so it can replay
+    setTimeout(() => {
+      submitBtn.classList.remove("shake");
+    }, 500);
+  };
+
+  const lenses = Array.from(document.querySelectorAll(".lens-card.active")).map(
+    (card) => card.dataset.name,
+  );
+  //console.log(lenses);
+  // Defensive checks
+  if (!dreamText) {
+    showToast("Please type a few lines or more about your dream...");
+    shakeFunc();
+    return;
+  }
+
+  if (lenses.length === 0) {
+    showToast("Please select at least one lens.");
+    shakeFunc();
+    return;
+  }
+
+  // Check if user is logged in
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return alert("You must be logged in to save your dream.");
+  if (!user) {
+    showToast("You must be logged in to save your dream.");
+    shakeFunc();
+    return;
+  }
 
+  // return;
+  // Insert into database
   const { error } = await supabase
     .from("dreams")
     .insert([{ user_id: user.id, dream_text: dreamText, lenses }]);
 
   if (error) {
     console.error("Error saving dream:", error);
-    alert("Something went wrong. Try again.");
+    showToast("Something went wrong. Try again.");
+    shakeFunc();
   } else {
-    alert("Your dream has been saved!");
+    showToast("Your dream has been saved!");
     dreamInput.value = "";
-    checkboxes.forEach((cb) => (cb.checked = false));
+    // Optionally: also uncheck all checkboxes
+    document
+      .querySelectorAll('input[name="lens"]:checked')
+      .forEach((cb) => (cb.checked = false));
   }
 });
+
+// /* ---------------- Dream Submission ---------------- */
+// submitBtn.addEventListener("click", async () => {
+//   const dreamText = dreamInput.value.trim();
+//   const lenses = Array.from(
+//     document.querySelectorAll('input[name="lens"]:checked'),
+//   ).map((cb) => cb.value);
+
+//   const {
+//     data: { user },
+//   } = await supabase.auth.getUser();
+//   if (!user) return alert("You must be logged in to save your dream.");
+
+//   const { error } = await supabase
+//     .from("dreams")
+//     .insert([{ user_id: user.id, dream_text: dreamText, lenses }]);
+
+//   if (error) {
+//     console.error("Error saving dream:", error);
+//     showToast("Something went wrong. Try again.");
+//   } else {
+//     showToast("Your dream has been saved!");
+//     dreamInput.value = "";
+//     //checkboxes.forEach((cb) => (cb.checked = false));
+//   }
+// });
 
 const buyButtons = document.querySelectorAll(".buy-token-button");
 
