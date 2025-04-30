@@ -495,7 +495,7 @@ function updateLensBar() {
   // Build selected names from <strong>
   const lensTags = Array.from(selectedCards).map((card, index) => {
     const name = card.querySelector("strong")?.textContent.trim() || "Unknown";
-    return `<span class="lens-tag" data-index="${index}">${name} <span class="remove-btn" data-index="${index}">✖</span></span>`;
+    return `<span class="lens-tag" data-index="${index}"><img class='lens-tag-img' src=/images/circles/${card.dataset.name}.jpg>${name} <span class="remove-btn" data-index="${index}">✖</span></span>`;
   });
 
   lensBar.innerHTML = lensTags.join("");

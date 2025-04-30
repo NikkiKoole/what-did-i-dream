@@ -24,11 +24,12 @@
                         src="images/favi.png"
                         alt="Dream Logo Icon"
                     />
-                    What did I dream?
+                    <div class="logo-text">What did I dream?</div>
                 </div></a
             >
+            <!-- Add ID to the nav list -->
             <nav>
-                <ul>
+                <ul id="main-nav-links">
                     <li><a href="#about">How It Works</a></li>
                     <li><a href="#lenses">Lenses</a></li>
                     <li><a href="#pricing">Pricing</a></li>
@@ -37,6 +38,19 @@
                     </li>
                 </ul>
             </nav>
+
+            <!-- Add the Hamburger Button -->
+            <button
+                id="mobile-menu-toggle"
+                class="mobile-menu-button"
+                aria-label="Toggle Menu"
+                aria-expanded="false"
+                aria-controls="main-nav-links"
+            >
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
             <div class="user-menu-wrapper">
                 <a href="#buy"><div id="credit-count"></div></a>
                 <div class="user-circle" id="user-menu">
@@ -84,7 +98,10 @@
                     Hello <span id="user-name">dreamer</span>!
                 </p>
                 <h1>What did you dream?</h1>
-                <p class="sub">Share it. See what it reveals.</p>
+                <p class="sub">
+                    Had a strange dream last night? Share it, and uncover its
+                    symbols.
+                </p>
 
                 <div id="dreamer" class="dream-input-group">
                     <textarea
@@ -100,11 +117,10 @@
 
             <section id="lenses" class="info-block">
                 <p>
-                    We’ve already picked three powerful lenses to get you
-                    started.<br />
-                    Want to change your view? Explore and choose your own — or
+                    We’ve chosen three powerful lenses to begin your journey.<br />
+                    Want a different view? <b>Pick your own lenses</b> — or
                     <button id="random-lenses" class="random-btn">
-                        let fate decide
+                        trust fate
                     </button>
                 </p>
                 <div id="selected-lenses-bar" class="lens-bar hidden">
@@ -554,5 +570,35 @@
         ></div>
 
         <script type="module" src="/src/main.js"></script>
+
+        <script>
+            const menuToggle = document.getElementById("mobile-menu-toggle");
+            const mainNav = document.getElementById("main-nav-links");
+            const navbar = document.querySelector(".navbar"); // Get the navbar
+
+            if (menuToggle && mainNav && navbar) {
+                menuToggle.addEventListener("click", () => {
+                    const isExpanded =
+                        menuToggle.getAttribute("aria-expanded") === "true";
+                    menuToggle.setAttribute("aria-expanded", !isExpanded);
+                    mainNav.classList.toggle("active");
+                    navbar.classList.toggle("mobile-nav-open"); // Toggle class on navbar
+                    // Optional: Toggle body class to prevent scrolling when menu is open
+                    // document.body.classList.toggle('no-scroll');
+                });
+
+                // Close menu when a link is clicked (useful for single-page anchors)
+                mainNav.querySelectorAll("a").forEach((link) => {
+                    link.addEventListener("click", () => {
+                        if (mainNav.classList.contains("active")) {
+                            menuToggle.setAttribute("aria-expanded", "false");
+                            mainNav.classList.remove("active");
+                            navbar.classList.remove("mobile-nav-open");
+                            // document.body.classList.remove('no-scroll');
+                        }
+                    });
+                });
+            }
+        </script>
     </body>
 </html>

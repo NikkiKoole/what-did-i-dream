@@ -1090,6 +1090,44 @@ footer {
 #app {
     display: flex;
 }
+
+/* --- Add near the top or in a dedicated section --- */
+.mobile-menu-button {
+    display: none; /* Hidden by default on larger screens */
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    z-index: 1010; /* Ensure it's clickable above other elements */
+    margin-left: 1rem; /* Add some space from the nav or logo */
+}
+
+.hamburger-line {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: var(--text-muted);
+    margin: 5px 0;
+    transition:
+        transform 0.3s ease,
+        opacity 0.3s ease;
+}
+
+/* Style the hamburger transformation to an 'X' when open */
+.navbar.mobile-nav-open .mobile-menu-button .hamburger-line:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+.navbar.mobile-nav-open .mobile-menu-button .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+.navbar.mobile-nav-open .mobile-menu-button .hamburger-line:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+.lens-tag-img {
+    border-radius: 50%;
+    height: 32px;
+    margin-left: -6px;
+}
 /* ======================================== */
 /* --- Media Queries --- */
 /* ======================================== */
@@ -1106,12 +1144,116 @@ footer {
 
 /* --- Small Screens (Tablets in portrait, large phones) --- */
 @media (max-width: 768px) {
+    /* Keep logo-text hidden as before */
+
+    /* Hide the desktop navigation UL */
+    .navbar nav ul#main-nav-links {
+        display: none; /* Hide by default on mobile */
+        position: absolute;
+        top: 100%; /* Position below the navbar */
+        left: 0;
+        right: 0;
+        background: var(
+            --bg-navbar
+        ); /* Use navbar bg or a slightly darker one */
+        flex-direction: column;
+        padding: 1rem 0; /* Padding top/bottom */
+        margin: 0;
+        border-top: 1px solid var(--border-light);
+        box-shadow: var(--shadow-medium);
+        z-index: 999; /* Below navbar but above content */
+        opacity: 0; /* Start hidden for transition */
+        transform: translateY(-10px); /* Start slightly up for transition */
+        transition:
+            opacity 0.3s ease,
+            transform 0.3s ease;
+        list-style: none; /* Ensure no list bullets */
+    }
+
+    /* Show the navigation when active */
+    .navbar nav ul#main-nav-links.active {
+        display: flex; /* Use flex for column layout */
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Style the links within the mobile menu */
+    .navbar nav ul#main-nav-links li {
+        margin: 0;
+        width: 100%;
+        text-align: center; /* Or left align: text-align: left; */
+        border-bottom: 1px solid rgba(221, 213, 204, 0.5); /* Faint line between items */
+    }
+    .navbar nav ul#main-nav-links li:last-child {
+        border-bottom: none;
+    }
+
+    .navbar nav ul#main-nav-links a {
+        display: block; /* Make link take full width */
+        padding: 1rem 1.5rem; /* Generous padding for touch */
+        font-size: 1.1rem; /* Slightly larger font */
+        color: var(--text-dark);
+        text-decoration: none;
+    }
+    .navbar nav ul#main-nav-links a:hover,
+    .navbar nav ul#main-nav-links a:focus {
+        background-color: var(--bg-filter-idle);
+        color: var(--text-heading);
+    }
+
+    /* Show the hamburger button */
+    .mobile-menu-button {
+        display: block;
+        order: 2; /* Position it between nav and user menu if using flex order */
+        margin-left: auto;
+    }
+
+    /* Adjust navbar flex layout if needed for button positioning */
+    .navbar {
+        /* Example: ensure items align well with the new button */
+        /* justify-content: space-between; */ /* Already there */
+    }
+
+    /* Hide the original nav wrapper (optional, if #main-nav-links is moved out) */
+    /* .navbar nav { display: none; } */ /* No, keep nav tag for structure */
+
+    /* Ensure user menu is still last item visually */
+    .user-menu-wrapper {
+        order: 3; /* Make sure user menu comes after the hamburger */
+
+        margin-left: 0.5rem;
+    }
+
+    /* Hide original inline nav on mobile completely */
+    nav ul:not(#main-nav-links) {
+        display: none;
+    }
+    /* Override the 600px rule that hid the nav */
+    @media (max-width: 600px) {
+        nav ul {
+            display: none; /* Keep it hidden, the mobile logic handles it */
+        }
+    }
+
+    @media (max-width: 420px) {
+        .logo-text {
+            display: none;
+        }
+    }
+
     .lens-bar {
         position: sticky;
         top: 50px; /* instead of top: 0 */
     }
+
     .navbar {
         padding: 1rem 1.5rem;
+    }
+    /* Ensure logo stays left */
+    .navbar > a {
+        /* Target the logo link specifically */
+        order: 0; /* Ensure it's the first item */
+        margin-right: auto; /* Push everything else away from the logo */
     }
     .navbar.shrink {
         padding: 0.5rem 1.5rem;
@@ -1172,6 +1314,7 @@ footer {
     nav ul {
         display: none;
     } /* Hide nav links */
+
     .navbar {
         justify-content: space-between;
     } /* Keep logo and user menu spaced */
