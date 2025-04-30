@@ -504,69 +504,83 @@ if (submitBtn) {
     //--------------------------------------------------------------------
   });
 }
-
-// --- Buy Token Buttons (Stripe Checkout) ---
 buyButtons.forEach((button) => {
+  /* ---------------- Stripe Checkout ---------------- */
   button.addEventListener("click", async () => {
     const priceId = button.dataset.priceId;
     if (!priceId) {
       console.error("Button is missing data-price-id attribute.");
-      showToast("Error: Pricing information missing.");
+      alert("Something went wrong. Cannot proceed with purchase.");
       return;
     }
+
+    // const {
+    //   data: { session },
+    // } = await supabase.auth.getSession();
+
+    // const res = await fetch("/.netlify/functions/create-checkout", {
+    //   method: "POST",
+    //   body: JSON.stringify({ priceId }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "x-user-email": session.user.email,
+    //   },
+    // });
+
+    // const { url } = await res.json();
+    // window.location.href = url;
 
     const {
       data: { session },
     } = await supabase.auth.getSession();
 
     if (!session?.user) {
-      showToast("Please sign in to purchase tokens.");
-      // Store intended purchase before redirecting (optional enhancement)
-      // localStorage.setItem('pendingPurchasePriceId', priceId);
+      // User is NOT logged in - trigger sign-in
+      showToast("Please sign in to purchase tokens."); // Optional feedback
       await supabase.auth.signInWithOAuth({ provider: "google" });
-      // Execution stops here due to redirect
+      // Note: The page will redirect for OAuth. The purchase flow
+      // would need to be re-initiated by the user after login.
+      // A more advanced flow could store the intended purchase in
+      // localStorage and resume after login, but this is simpler.
     } else {
-      // User is logged in, proceed to checkout function
+      // User IS logged in - proceed to checkout
       try {
-        button.disabled = true; // Prevent double clicks
-        button.textContent = "Processing..."; // Provide feedback
-
-        const response = await fetch("/.netlify/functions/create-checkout", {
+        const res = await fetch("/.netlify/functions/create-checkout", {
           method: "POST",
+          body: JSON.stringify({ priceId: priceId }), // Use the dynamic priceId
           headers: {
             "Content-Type": "application/json",
-            // Pass necessary info to your serverless function
-            // It MUST verify the user's session using the token
-            Authorization: `Bearer ${session.access_token}`,
-            // You might not need x-user-email if verified via token
-            // "x-user-email": session.user.email,
+            // Ensure the user email is correctly passed if needed by the function
+            // You might need to adjust how the email is retrieved based on your function's needs
+            "x-user-email": session.user.email, // Pass user email if needed by backend
+            // Consider passing user ID too if your function uses it
+            // "x-user-id": session.user.id
           },
-          body: JSON.stringify({ priceId: priceId }),
         });
 
-        if (!response.ok) {
-          const errorData = await response.json();
+        if (!res.ok) {
+          const errorData = await res.json();
           throw new Error(
-            errorData.message || `Checkout failed (${response.status})`,
+            errorData.message ||
+              `Checkout creation failed with status: ${res.status}`,
           );
         }
 
-        const { url } = await response.json();
+        const { url } = await res.json();
         if (url) {
           window.location.href = url; // Redirect to Stripe
         } else {
-          throw new Error("Checkout URL not received.");
+          throw new Error("Checkout URL not received from server.");
         }
       } catch (error) {
-        console.error("Stripe Checkout Error:", error);
-        showToast(`Error: ${error.message || "Could not start purchase."}`);
-        button.disabled = false; // Re-enable button on error
-        button.textContent = button.dataset.originalText || "Buy Now"; // Restore original text if stored
+        console.error("Checkout Error:", error);
+        showToast(`Error: ${error.message || "Could not initiate purchase."}`);
+        alert(
+          "Something went wrong initiating the purchase. Please try again.",
+        );
       }
     }
   });
-  // Store original button text for restoration on error (optional)
-  button.dataset.originalText = button.textContent;
 });
 
 // --- Sign In Button (from Banner) ---
