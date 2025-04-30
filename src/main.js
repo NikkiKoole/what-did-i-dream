@@ -7,29 +7,73 @@ const supabase = createClient(
 );
 
 /* ---------------- DOM References ---------------- */
-const images = document.querySelectorAll(".lens-card img");
-const buttons = document.querySelectorAll(".lens-filter button");
-const cards = document.querySelectorAll(".lens-card");
-//const checkboxes = document.querySelectorAll('input[name="lens"]');
-const submitBtn = document.getElementById("submit-dream");
+// General UI
+const navbar = document.querySelector(".navbar");
+const toast = document.getElementById("toast");
+const banner = document.getElementById("free-token-banner"); // Free token banner
+const signInBtn = document.getElementById("signin-cta"); // Banner sign-in button
+
+// Hero / Dream Input
 const dreamInput = document.getElementById("dream-input");
-const signinModal = document.getElementById("signin-modal");
-const banner = document.getElementById("free-token-banner");
-const signInBtn = document.getElementById("signin-cta");
+const submitBtn = document.getElementById("submit-dream");
+const helloUserText = document.getElementById("hello-user");
+const userNameSpan = document.getElementById("user-name");
 
-const userMenu = document.getElementById("user-menu");
-const userDropdown = document.getElementById("user-dropdown");
-const userAvatar = document.getElementById("user-avatar");
-const userInitials = document.getElementById("user-initials");
-const loginOption = document.getElementById("login-option");
-const logoutOption = document.getElementById("logout-option");
-const creditCountEl = document.getElementById("credit-count");
-const journalNavItem = document.getElementById("journal-nav-item"); // <-- ADD
+// Lenses
+const images = document.querySelectorAll(".lens-card img"); // Lens images for hover effect
+const filterButtons = document.querySelectorAll(".lens-filter button"); // Lens type filter buttons
+const lensCards = document.querySelectorAll(".lens-card"); // All lens cards
+const selectedLensesBar = document.getElementById("selected-lenses-bar"); // Floating bar for selected lenses
+const randomLensesBtn = document.getElementById("random-lenses"); // Random selection button
 
-/* ---------------- UI & Auth ---------------- */
+// User Menu / Auth
+const userMenu = document.getElementById("user-menu"); // Circle icon
+const userDropdown = document.getElementById("user-dropdown"); // Dropdown container
+const userAvatar = document.getElementById("user-avatar"); // Img tag for avatar
+const userInitials = document.getElementById("user-initials"); // Span for initials
+const loginOption = document.getElementById("login-option"); // Sign In list item
+const logoutOption = document.getElementById("logout-option"); // Sign Out list item
+const creditCountEl = document.getElementById("credit-count"); // Credit display element
+const journalNavItem = document.getElementById("journal-nav-item"); // Journal link in nav
+
+// Pricing / Checkout
+const buyButtons = document.querySelectorAll(".buy-token-button"); // All purchase buttons
+
+// Modal (If still used, otherwise remove)
+// const signinModal = document.getElementById("signin-modal");
+
+/* ---------------- State Variables ---------------- */
+let isNavbarShrunk = false;
+let initialAuthCheckDone = false; // Flag to ensure initial auth logic runs only once
+
+/* ---------------- UI Functions ---------------- */
+
+function showToast(message) {
+  if (!toast) return;
+  toast.textContent = message;
+  // Ensure transition starts from opacity 0 iftoast was hidden quickly
+  toast.style.transition = "none";
+  toast.style.opacity = 0;
+  // Force reflow/repaint
+  toast.offsetHeight;
+  // Apply transition and fade in
+  toast.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+  toast.classList.add("show"); // Add class to trigger transform etc.
+  toast.style.opacity = 1;
+
+  // Fade out after delay
+  setTimeout(() => {
+    toast.style.opacity = 0;
+    toast.classList.remove("show");
+  }, 2500); // Increased duration slightly
+}
+
 function updateUserUI(session) {
-  if (session?.user) {
-    const meta = session.user.user_metadata || {};
+  const isLoggedIn = !!session?.user;
+
+  if (isLoggedIn) {
+    const user = session.user;
+    const meta = user.user_metadata || {};
     const name = meta.name || meta.full_name || "dreamer";
     const initials = name
       .split(" ")
@@ -38,7 +82,7 @@ function updateUserUI(session) {
       .slice(0, 2)
       .toUpperCase();
 
-    // Avatar
+    // --- Update Avatar/Initials ---
     if (meta.avatar_url) {
       userAvatar.src = meta.avatar_url;
       userAvatar.style.display = "block";
@@ -49,476 +93,572 @@ function updateUserUI(session) {
       userAvatar.style.display = "none";
     }
 
-    loginOption.style.display = "none";
-    logoutOption.style.display = "block";
+    // --- Update Dropdown Menu ---
+    if (loginOption) loginOption.style.display = "none";
+    if (logoutOption) logoutOption.style.display = "block";
 
-    // Hello message
-    const helloText = document.getElementById("hello-user");
-    const nameSpan = document.getElementById("user-name");
-    if (helloText && nameSpan) {
-      nameSpan.textContent = name.split(" ")[0];
-      helloText.style.display = "block";
+    // --- Update Hello Message ---
+    if (helloUserText && userNameSpan) {
+      userNameSpan.textContent = name.split(" ")[0]; // Show first name
+      helloUserText.style.display = "block"; // Or 'flex' etc. based on CSS
     }
 
-    // Fetch and display credits
-    // Show Journal link
+    // --- Show Journal Link ---
     if (journalNavItem) {
-      // Add check to ensure element exists
-      journalNavItem.style.display = "list-item"; // Or 'block' if preferred
+      journalNavItem.style.display = "list-item"; // Or 'block'
     }
-    if (session?.user?.id) {
-      setTimeout(() => fetchUserCredits(session.user.id), 200);
+
+    // --- Fetch and Display Credits ---
+    // Check element exists before fetching
+    if (user.id && creditCountEl) {
+      fetchUserCredits(user.id);
+    } else if (creditCountEl) {
+      // Hide credits if element exists but user ID doesn't (shouldn't happen here)
+      creditCountEl.style.display = "none";
+    }
+
+    // --- Hide Free Token Banner ---
+    if (banner) {
+      banner.style.display = "none";
     }
   } else {
+    // --- Logged Out State ---
+
+    // --- Update Avatar/Initials (Default) ---
     userAvatar.src = "images/user-icon.svg";
     userAvatar.style.display = "block";
     userInitials.style.display = "none";
-    loginOption.style.display = "block";
-    logoutOption.style.display = "none";
-    const helloText = document.getElementById("hello-user");
-    if (helloText) helloText.style.display = "none";
-    // Hide Journal link
+
+    // --- Update Dropdown Menu ---
+    if (loginOption) loginOption.style.display = "block"; // Or 'list-item'
+    if (logoutOption) logoutOption.style.display = "none";
+
+    // --- Hide Hello Message ---
+    if (helloUserText) helloUserText.style.display = "none";
+
+    // --- Hide Journal Link ---
     if (journalNavItem) {
-      // Add check to ensure element exists
       journalNavItem.style.display = "none";
     }
-    if (creditCountEl) creditCountEl.style.display = "none";
+
+    // --- Hide Credits ---
+    if (creditCountEl) {
+      creditCountEl.textContent = ""; // Clear text
+      creditCountEl.style.display = "none";
+    }
+
+    // NOTE: Banner display logic is handled in the initial auth check
   }
 }
 
 async function fetchUserCredits(userId) {
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("credits", { head: false })
-    .eq("id", userId)
-    .maybeSingle();
+  // Ensure element exists before proceeding
+  if (!creditCountEl) {
+    console.warn("Credit count element not found.");
+    return;
+  }
 
-  if (!error && data?.credits != null && creditCountEl) {
-    creditCountEl.textContent = data.credits;
-    creditCountEl.style.display = "inline-block";
-  } else {
-    console.warn("Could not fetch user credits:", error);
-    if (creditCountEl) creditCountEl.style.display = "none";
+  try {
+    const { data, error, status } = await supabase
+      .from("profiles")
+      .select("credits")
+      .eq("id", userId)
+      .maybeSingle(); // Use maybeSingle to handle potential null profile gracefully
+
+    if (error && status !== 406) {
+      // 406 is expected if row doesn't exist with maybeSingle
+      throw error;
+    }
+
+    if (data?.credits != null) {
+      creditCountEl.textContent = `Tokens: ${data.credits}`; // Add label for clarity
+      creditCountEl.style.display = "inline-block"; // Or 'flex', 'block' etc.
+    } else {
+      // Profile might exist but credits are null, or profile doesn't exist yet
+      console.log(
+        "User profile found, but credits are null or profile not yet created with credits.",
+      );
+      creditCountEl.textContent = "Tokens: 0"; // Display 0 if no credits found/profile missing
+      creditCountEl.style.display = "inline-block";
+    }
+  } catch (error) {
+    console.error("Error fetching user credits:", error);
+    creditCountEl.textContent = ""; // Clear on error
+    creditCountEl.style.display = "none"; // Hide on error
   }
 }
 
-/* ---------------- Interactions ---------------- */
+function updateLensBar() {
+  if (!selectedLensesBar) return;
+
+  const selectedCards = document.querySelectorAll(".lens-card.active");
+
+  if (selectedCards.length === 0) {
+    selectedLensesBar.classList.add("hidden");
+    selectedLensesBar.innerHTML = ""; // Clear content
+    return;
+  }
+
+  const lensTagsHTML = Array.from(selectedCards)
+    .map((card) => {
+      const name = card.dataset.name; // Use data-name for consistency
+      const displayName =
+        card.querySelector("strong")?.textContent.trim() || name || "Unknown";
+      const imageSrc =
+        card.querySelector("img")?.src || `images/circles/${name}.jpg`; // Fallback image path
+      // Use data-name on the remove button for easier card finding
+      return `
+          <span class="lens-tag" data-name="${name}">
+              <img class='lens-tag-img' src="${imageSrc}" alt="${displayName}">
+              ${displayName}
+              <span class="remove-btn" data-name="${name}" aria-label="Remove ${displayName}">✖</span>
+          </span>`;
+    })
+    .join("");
+
+  selectedLensesBar.innerHTML = lensTagsHTML;
+  selectedLensesBar.classList.remove("hidden");
+
+  // Re-attach event listeners for the new remove buttons
+  selectedLensesBar.querySelectorAll(".remove-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation(); // Prevent card click if bar overlaps
+      const nameToRemove = btn.dataset.name;
+      const cardToRemove = document.querySelector(
+        `.lens-card[data-name="${nameToRemove}"]`,
+      );
+      if (cardToRemove) {
+        cardToRemove.classList.remove("active");
+        updateLensBar(); // Refresh the bar after removal
+      }
+    });
+  });
+}
+
+// Helper to select initial/random lenses
+function selectLensesByName(lensNames) {
+  // Clear all existing selections first
+  lensCards.forEach((card) => card.classList.remove("active"));
+
+  // Select the ones provided by name
+  lensNames.forEach((name) => {
+    const card = document.querySelector(`.lens-card[data-name="${name}"]`);
+    if (card) {
+      card.classList.add("active");
+    } else {
+      console.warn(`Lens card with data-name="${name}" not found.`);
+    }
+  });
+  // Update the UI bar after selection
+  updateLensBar();
+}
+
+/* ---------------- Event Listeners & Interactions ---------------- */
+
+// --- Lens Image Hover Effect ---
 images.forEach((img) => {
   img.addEventListener("mousemove", (e) => {
     const rect = img.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -10;
+    const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -10; // Less intense rotation
     const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 10;
-    img.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+    img.style.transform = `perspective(500px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`; // Add perspective
+    img.style.transition = "transform 0.05s linear"; // Faster transition while moving
   });
   img.addEventListener("mouseleave", () => {
-    img.style.transform = "rotateX(0deg) rotateY(0deg) scale(1)";
+    img.style.transform =
+      "perspective(500px) rotateX(0deg) rotateY(0deg) scale(1)";
+    img.style.transition = "transform 0.3s ease"; // Slower transition on leave
   });
 });
 
-// filter lenses card
-buttons.forEach((button) => {
+// --- Lens Type Filtering ---
+filterButtons.forEach((button) => {
   button.addEventListener("click", () => {
     const filter = button.getAttribute("data-filter");
-    buttons.forEach((btn) => btn.classList.remove("active"));
+
+    // Update active button state
+    filterButtons.forEach((btn) => btn.classList.remove("active"));
     button.classList.add("active");
 
-    cards.forEach((card) => {
+    // Filter cards (using opacity transition for smoothness)
+    lensCards.forEach((card) => {
       const type = card.getAttribute("data-type");
-      const match = filter === "all" || type === filter;
-      card.style.transition = "opacity 0.3s ease";
-      card.style.opacity = match ? "1" : "0";
-      setTimeout(
-        () => {
-          card.style.display = match ? "block" : "none";
-        },
-        match ? 10 : 300,
-      );
+      const shouldShow = filter === "all" || type === filter;
+
+      // Apply opacity transition
+      card.style.transition = "opacity 0.3s ease, transform 0.3s ease"; // Added transform
+      card.style.opacity = shouldShow ? "1" : "0";
+      card.style.transform = shouldShow ? "scale(1)" : "scale(0.95)"; // Slight scale effect
+
+      // Use setTimeout to change display after opacity transition starts
+      // This prevents jumpy behavior if display changes instantly
+      if (shouldShow) {
+        // If showing, remove display:none immediately or after a very short delay
+        card.style.display = "flex"; // Assuming flex layout for cards
+      } else {
+        // If hiding, set display:none *after* the opacity transition duration
+        setTimeout(() => {
+          card.style.display = "none";
+        }, 300); // Match CSS transition duration
+      }
     });
   });
 });
 
-// cards.forEach((card) => {
-//   card.addEventListener("click", () => {
-//     card.classList.toggle("active");
-//   });
-// });
-function showToast(message) {
-  const toast = document.getElementById("toast");
-  toast.textContent = message;
-  toast.style.opacity = 1;
-  setTimeout(() => {
-    toast.style.opacity = 0;
-  }, 2000);
-}
-cards.forEach((card) => {
+// --- Lens Card Selection ---
+lensCards.forEach((card) => {
   card.addEventListener("click", () => {
-    const selectedCards = document.querySelectorAll(".lens-card.active");
+    const isActive = card.classList.contains("active");
+    const selectedCount = document.querySelectorAll(".lens-card.active").length;
 
-    // If already active, allow deselection
-    if (card.classList.contains("active")) {
+    if (isActive) {
+      // Allow deselection
       card.classList.remove("active");
-      updateLensBar();
-      return;
+    } else {
+      // Check limit before selecting
+      if (selectedCount >= 3) {
+        showToast("You can select up to 3 lenses.");
+        // Shake the card that was clicked
+        card.classList.add("shake");
+        setTimeout(() => card.classList.remove("shake"), 400); // Corresponds to CSS animation
+        return; // Stop further processing
+      } else {
+        // Allow selection
+        card.classList.add("active");
+      }
     }
-
-    // If 3 are already selected, prevent and shake
-    if (selectedCards.length >= 3) {
-      card.classList.add("shake");
-
-      // Optional: remove shake class after animation ends so it can replay
-      setTimeout(() => {
-        card.classList.remove("shake");
-      }, 500); // Match your CSS animation duration
-
-      // Optional: Show toast
-      showToast("You can only select 3 lenses.");
-      updateLensBar();
-      return;
-    }
-
-    // Otherwise, allow selection
-    card.classList.add("active");
+    // Update the floating bar display
     updateLensBar();
   });
 });
-function selectLenses(lensNames) {
-  // First, clear all selections
-  document.querySelectorAll(".lens-card.active").forEach((card) => {
-    card.classList.remove("active");
-  });
 
-  // Then, select the ones provided
-  lensNames.forEach((name) => {
-    const card = document.querySelector(`.lens-card[data-name="${name}"]`);
-    if (card) {
-      card.classList.add("active");
+// --- Random Lens Selection ---
+if (randomLensesBtn) {
+  randomLensesBtn.addEventListener("click", () => {
+    const allLensNames = Array.from(lensCards).map((card) => card.dataset.name);
+    // Shuffle the array
+    for (let i = allLensNames.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [allLensNames[i], allLensNames[j]] = [allLensNames[j], allLensNames[i]]; // Swap
     }
+    const randomThreeNames = allLensNames.slice(0, 3);
+    selectLensesByName(randomThreeNames);
+    showToast("Fate has chosen your lenses!");
   });
 }
-// submitBtn.addEventListener("click", () => {
-//   const input = dreamInput.value.trim();
 
-//   const selected = Array.from(document.querySelectorAll(".lens-card.active"));
-//   //console.log(picks);
-//   //const selected = Array.from(checkboxes).filter((i) => i.checked);
-//   if (!input || selected.length === 0) {
-//     alert("Please enter a dream and choose at least one lens.");
-//     return;
-//   }
-//   signinModal.style.display = "flex";
-// });
-
-window.closeModal = function () {
-  signinModal.style.display = "none";
-  alert("Thank you! Your dream is being interpreted.");
-};
-
-let isShrunk = false;
-window.addEventListener("scroll", () => {
-  const nav = document.querySelector(".navbar");
-  const scrollY = window.scrollY;
-  if (!isShrunk && scrollY > 150) {
-    nav.classList.add("shrink");
-    isShrunk = true;
-  } else if (isShrunk && scrollY < 10) {
-    nav.classList.remove("shrink");
-    isShrunk = false;
-  }
-});
-
-userMenu.addEventListener("click", () => {
-  userDropdown.style.display =
-    userDropdown.style.display === "block" ? "none" : "block";
-});
-document.addEventListener("click", (e) => {
-  if (!userMenu.contains(e.target) && !userDropdown.contains(e.target)) {
-    userDropdown.style.display = "none";
-  }
-});
-
-/* ---------------- Auth State Init ---------------- */
-(async () => {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  updateUserUI(session);
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!session?.user && banner) banner.style.display = "block";
-
-  supabase.auth.onAuthStateChange(async (_event, session) => {
-    updateUserUI(session);
-
-    if (session?.user) {
-      const { id, email } = session.user;
-
-      const { error } = await supabase.from("profiles").upsert(
-        { id, email }, // Do not include credits here!
-        { onConflict: "id" },
-      );
-
-      if (error) {
-        console.warn("⚠️ Failed to upsert profile row:", error.message);
-      } else {
-        console.log("✅ User profile ensured");
-      }
+// --- Navbar Shrink on Scroll ---
+window.addEventListener(
+  "scroll",
+  () => {
+    if (!navbar) return;
+    const scrollY = window.scrollY;
+    if (!isNavbarShrunk && scrollY > 100) {
+      // Adjust threshold as needed
+      navbar.classList.add("shrink");
+      isNavbarShrunk = true;
+    } else if (isNavbarShrunk && scrollY < 50) {
+      navbar.classList.remove("shrink");
+      isNavbarShrunk = false;
     }
+  },
+  { passive: true },
+); // Use passive listener for scroll performance
+
+// --- User Dropdown Menu Toggle ---
+if (userMenu) {
+  userMenu.addEventListener("click", (e) => {
+    e.stopPropagation(); // Prevent document click handler from closing immediately
+    const isDisplayed = userDropdown.style.display === "block";
+    userDropdown.style.display = isDisplayed ? "none" : "block";
   });
-})();
+}
 
-/* ---------------- Auth Actions ---------------- */
-loginOption.addEventListener("click", async () => {
-  await supabase.auth.signInWithOAuth({ provider: "google" });
+// --- Close Dropdown on Outside Click ---
+document.addEventListener("click", (e) => {
+  if (userDropdown && userDropdown.style.display === "block") {
+    if (!userMenu.contains(e.target) && !userDropdown.contains(e.target)) {
+      userDropdown.style.display = "none";
+    }
+  }
 });
 
-logoutOption.addEventListener("click", async () => {
-  await supabase.auth.signOut();
-  updateUserUI(null); // ensures logout UI updates correctly
-  // Hide dropdown explicitly
-  userDropdown.style.display = "none";
+// --- Submit Dream ---
+if (submitBtn) {
+  submitBtn.addEventListener("click", async () => {
+    const dreamText = dreamInput.value.trim();
+    const selectedLensNames = Array.from(
+      document.querySelectorAll(".lens-card.active"),
+    ).map((card) => card.dataset.name);
 
-  // Hide credit count if present
-  if (creditCountEl) creditCountEl.textContent = "";
-});
+    // --- Validation Checks ---
+    if (!dreamText) {
+      showToast("Please type a few lines about your dream.");
+      dreamInput.focus();
+      dreamInput.classList.add("shake"); // Shake effect on input
+      setTimeout(() => dreamInput.classList.remove("shake"), 400);
+      return;
+    }
+    if (selectedLensNames.length === 0) {
+      showToast("Please select at least one lens.");
+      // Maybe scroll to lenses or shake the lens section?
+      const lensesSection = document.getElementById("lenses");
+      if (lensesSection)
+        lensesSection.scrollIntoView({ behavior: "smooth", block: "center" });
+      selectedLensesBar.classList.add("shake"); // Shake the bar
+      setTimeout(() => selectedLensesBar.classList.remove("shake"), 400);
+      return;
+    }
 
-submitBtn.addEventListener("click", async () => {
-  const dreamText = dreamInput.value.trim();
-  // const lenses = Array.from(
-  //   document.querySelectorAll('input[name="lens"]:checked'),
-  // ).map((cb) => cb.value);
+    // --- Check Login State ---
+    const {
+      data: { session },
+    } = await supabase.auth.getSession(); // More efficient than getUser here
+    if (!session?.user) {
+      showToast("Please sign in to save and interpret your dream.");
+      // Optionally shake login button or open login modal/redirect
+      loginOption.parentElement.parentElement.style.display = "block"; // Show dropdown
+      loginOption.classList.add("shake"); // Needs CSS for shake on li
+      setTimeout(() => loginOption.classList.remove("shake"), 400);
+      return;
+    }
 
-  let shakeFunc = () => {
-    submitBtn.classList.add("shake");
+    // --- Check Credits (Client-side preliminary check) ---
+    // Note: Final check MUST be server-side (in your interpretation function)
+    const currentCreditsText = creditCountEl?.textContent || "0";
+    const currentCredits = parseInt(currentCreditsText.replace(/\D/g, ""), 10); // Extract number
 
-    // Optional: remove shake class after animation ends so it can replay
+    if (isNaN(currentCredits) || currentCredits < 1) {
+      showToast("You need at least 1 token to interpret a dream.");
+      // Optionally shake credit count or redirect to pricing
+      const pricingSection = document.getElementById("pricing");
+      if (pricingSection)
+        pricingSection.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (creditCountEl) {
+        creditCountEl.classList.add("shake"); // Needs CSS for shake
+        setTimeout(() => creditCountEl.classList.remove("shake"), 400);
+      }
+      return;
+    }
+
+    // --- Proceed with Saving/Interpretation (Placeholder) ---
+    // IMPORTANT: This part should likely call your Netlify function
+    // which handles saving, credit deduction (server-side!), and interpretation.
+    console.log("Submitting dream for user:", session.user.id);
+    console.log("Dream Text:", dreamText);
+    console.log("Selected Lenses:", selectedLensNames);
+    showToast("Interpreting your dream... ✨"); // Indicate processing
+
+    // TODO: Replace with actual API call to your backend/Netlify function
+    // Example:
+    // try {
+    //   submitBtn.disabled = true; // Prevent double clicks
+    //   submitBtn.textContent = 'Interpreting...';
+    //   const response = await fetch('/.netlify/functions/interpret-dream', {
+    //      method: 'POST',
+    //      headers: {
+    //         'Content-Type': 'application/json',
+    //         'Authorization': `Bearer ${session.access_token}` // Pass token for auth
+    //      },
+    //      body: JSON.stringify({ dreamText, lenses: selectedLensNames })
+    //   });
+    //   if (!response.ok) {
+    //      const errorData = await response.json();
+    //      throw new Error(errorData.message || 'Interpretation failed');
+    //   }
+    //   const result = await response.json();
+    //   showToast("Dream interpretation complete!");
+    //   // Redirect to journal page with the new dream ID, or display results directly
+    //   window.location.href = `/journal.html?dreamId=${result.dreamId}`;
+    //   dreamInput.value = ""; // Clear input on success
+    //   selectLensesByName([]); // Clear selected lenses
+    // } catch (error) {
+    //    console.error("Error submitting dream:", error);
+    //    showToast(`Error: ${error.message}`);
+    // } finally {
+    //    submitBtn.disabled = false;
+    //    submitBtn.textContent = 'Reveal my dream';
+    // }
+
+    // --- TEMPORARY: Simulate success and redirect to Journal (if exists) ---
     setTimeout(() => {
-      submitBtn.classList.remove("shake");
-    }, 500);
-  };
+      showToast("Dream Saved! Redirecting...");
+      // Save dream details to localStorage to be picked up by journal.js
+      localStorage.setItem(
+        "latestDream",
+        JSON.stringify({
+          dream_text: dreamText,
+          lenses: selectedLensNames,
+          // Add a timestamp or temporary ID if needed
+          submittedAt: new Date().toISOString(),
+        }),
+      );
+      // Clear form
+      dreamInput.value = "";
+      selectLensesByName([]); // Clear selected lenses
+      // Redirect
+      window.location.href = "/journal.html";
+    }, 1500);
+    //--------------------------------------------------------------------
+  });
+}
 
-  const lenses = Array.from(document.querySelectorAll(".lens-card.active")).map(
-    (card) => card.dataset.name,
-  );
-  //console.log(lenses);
-  // Defensive checks
-  if (!dreamText) {
-    showToast("Please type a few lines or more about your dream...");
-    shakeFunc();
-    return;
-  }
-
-  if (lenses.length === 0) {
-    showToast("Please select at least one lens.");
-    shakeFunc();
-    return;
-  }
-
-  // Check if user is logged in
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    showToast("You must be logged in to save your dream.");
-    shakeFunc();
-    return;
-  }
-
-  // return;
-  // Insert into database
-  const { error } = await supabase
-    .from("dreams")
-    .insert([{ user_id: user.id, dream_text: dreamText, lenses }]);
-
-  if (error) {
-    console.error("Error saving dream:", error);
-    showToast("Something went wrong. Try again.");
-    shakeFunc();
-  } else {
-    showToast("Your dream has been saved!");
-    dreamInput.value = "";
-    // Optionally: also uncheck all checkboxes
-    document
-      .querySelectorAll('input[name="lens"]:checked')
-      .forEach((cb) => (cb.checked = false));
-  }
-});
-
-// /* ---------------- Dream Submission ---------------- */
-// submitBtn.addEventListener("click", async () => {
-//   const dreamText = dreamInput.value.trim();
-//   const lenses = Array.from(
-//     document.querySelectorAll('input[name="lens"]:checked'),
-//   ).map((cb) => cb.value);
-
-//   const {
-//     data: { user },
-//   } = await supabase.auth.getUser();
-//   if (!user) return alert("You must be logged in to save your dream.");
-
-//   const { error } = await supabase
-//     .from("dreams")
-//     .insert([{ user_id: user.id, dream_text: dreamText, lenses }]);
-
-//   if (error) {
-//     console.error("Error saving dream:", error);
-//     showToast("Something went wrong. Try again.");
-//   } else {
-//     showToast("Your dream has been saved!");
-//     dreamInput.value = "";
-//     //checkboxes.forEach((cb) => (cb.checked = false));
-//   }
-// });
-
-const buyButtons = document.querySelectorAll(".buy-token-button");
-
+// --- Buy Token Buttons (Stripe Checkout) ---
 buyButtons.forEach((button) => {
-  /* ---------------- Stripe Checkout ---------------- */
   button.addEventListener("click", async () => {
     const priceId = button.dataset.priceId;
     if (!priceId) {
       console.error("Button is missing data-price-id attribute.");
-      alert("Something went wrong. Cannot proceed with purchase.");
+      showToast("Error: Pricing information missing.");
       return;
     }
-
-    // const {
-    //   data: { session },
-    // } = await supabase.auth.getSession();
-
-    // const res = await fetch("/.netlify/functions/create-checkout", {
-    //   method: "POST",
-    //   body: JSON.stringify({ priceId }),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "x-user-email": session.user.email,
-    //   },
-    // });
-
-    // const { url } = await res.json();
-    // window.location.href = url;
 
     const {
       data: { session },
     } = await supabase.auth.getSession();
 
     if (!session?.user) {
-      // User is NOT logged in - trigger sign-in
-      showToast("Please sign in to purchase tokens."); // Optional feedback
+      showToast("Please sign in to purchase tokens.");
+      // Store intended purchase before redirecting (optional enhancement)
+      // localStorage.setItem('pendingPurchasePriceId', priceId);
       await supabase.auth.signInWithOAuth({ provider: "google" });
-      // Note: The page will redirect for OAuth. The purchase flow
-      // would need to be re-initiated by the user after login.
-      // A more advanced flow could store the intended purchase in
-      // localStorage and resume after login, but this is simpler.
+      // Execution stops here due to redirect
     } else {
-      // User IS logged in - proceed to checkout
+      // User is logged in, proceed to checkout function
       try {
-        const res = await fetch("/.netlify/functions/create-checkout", {
+        button.disabled = true; // Prevent double clicks
+        button.textContent = "Processing..."; // Provide feedback
+
+        const response = await fetch("/.netlify/functions/create-checkout", {
           method: "POST",
-          body: JSON.stringify({ priceId: priceId }), // Use the dynamic priceId
           headers: {
             "Content-Type": "application/json",
-            // Ensure the user email is correctly passed if needed by the function
-            // You might need to adjust how the email is retrieved based on your function's needs
-            "x-user-email": session.user.email, // Pass user email if needed by backend
-            // Consider passing user ID too if your function uses it
-            // "x-user-id": session.user.id
+            // Pass necessary info to your serverless function
+            // It MUST verify the user's session using the token
+            Authorization: `Bearer ${session.access_token}`,
+            // You might not need x-user-email if verified via token
+            // "x-user-email": session.user.email,
           },
+          body: JSON.stringify({ priceId: priceId }),
         });
 
-        if (!res.ok) {
-          const errorData = await res.json();
+        if (!response.ok) {
+          const errorData = await response.json();
           throw new Error(
-            errorData.message ||
-              `Checkout creation failed with status: ${res.status}`,
+            errorData.message || `Checkout failed (${response.status})`,
           );
         }
 
-        const { url } = await res.json();
+        const { url } = await response.json();
         if (url) {
           window.location.href = url; // Redirect to Stripe
         } else {
-          throw new Error("Checkout URL not received from server.");
+          throw new Error("Checkout URL not received.");
         }
       } catch (error) {
-        console.error("Checkout Error:", error);
-        showToast(`Error: ${error.message || "Could not initiate purchase."}`);
-        alert(
-          "Something went wrong initiating the purchase. Please try again.",
-        );
+        console.error("Stripe Checkout Error:", error);
+        showToast(`Error: ${error.message || "Could not start purchase."}`);
+        button.disabled = false; // Re-enable button on error
+        button.textContent = button.dataset.originalText || "Buy Now"; // Restore original text if stored
       }
     }
   });
+  // Store original button text for restoration on error (optional)
+  button.dataset.originalText = button.textContent;
 });
 
-signInBtn?.addEventListener("click", async () => {
-  await supabase.auth.signInWithOAuth({ provider: "google" });
-});
-
-document.getElementById("random-lenses").addEventListener("click", () => {
-  const allCards = Array.from(document.querySelectorAll(".lens-card"));
-  const shuffled = allCards.sort(() => 0.5 - Math.random());
-  const randomThree = shuffled.slice(0, 3);
-
-  // Clear current selections
-  allCards.forEach((card) => card.classList.remove("active"));
-
-  // Select the random three
-  randomThree.forEach((card) => card.classList.add("active"));
-  // showToast("Fate decided:");
-
-  // Select the random three and collect names from <strong>
-  // const names = randomThree.map((card) => {
-  //   const nameEl = card.querySelector("strong");
-  //   return nameEl ? nameEl.textContent.trim() : "Unknown";
-  // });
-  // showToast("Fate decided: " + names.join(", "));
-
-  // Update the floating lens bar
-  updateLensBar();
-});
-
-function updateLensBar() {
-  const lensBar = document.getElementById("selected-lenses-bar");
-  const selectedCards = document.querySelectorAll(".lens-card.active");
-
-  // Hide if nothing selected
-  if (selectedCards.length === 0) {
-    lensBar.classList.add("hidden");
-    return;
-  }
-
-  // Build selected names from <strong>
-  const lensTags = Array.from(selectedCards).map((card, index) => {
-    const name = card.querySelector("strong")?.textContent.trim() || "Unknown";
-    return `<span class="lens-tag" data-index="${index}"><img class='lens-tag-img' src=/images/circles/${card.dataset.name}.jpg>${name} <span class="remove-btn" data-index="${index}">✖</span></span>`;
-  });
-
-  lensBar.innerHTML = lensTags.join("");
-  lensBar.classList.remove("hidden");
-
-  // Hook up remove button
-  lensBar.querySelectorAll(".remove-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const name = btn.parentElement.textContent.trim().replace("✖", "");
-      const matchingCard = Array.from(
-        document.querySelectorAll(".lens-card"),
-      ).find(
-        (card) =>
-          card.querySelector("strong")?.textContent.trim() === name.trim(),
-      );
-      console.log(name);
-      if (matchingCard) {
-        matchingCard.classList.remove("active");
-        updateLensBar(); // refresh
-      }
-    });
+// --- Sign In Button (from Banner) ---
+if (signInBtn) {
+  signInBtn.addEventListener("click", async () => {
+    await supabase.auth.signInWithOAuth({ provider: "google" });
   });
 }
 
-selectLenses(["helga", "otter", "whitmore"]);
-updateLensBar();
+// --- Auth Action: Sign In (from Dropdown) ---
+if (loginOption) {
+  loginOption.addEventListener("click", async () => {
+    userDropdown.style.display = "none"; // Close dropdown
+    await supabase.auth.signInWithOAuth({ provider: "google" });
+  });
+}
+
+// --- Auth Action: Sign Out (from Dropdown) ---
+if (logoutOption) {
+  logoutOption.addEventListener("click", async () => {
+    userDropdown.style.display = "none"; // Close dropdown
+    await supabase.auth.signOut();
+    // UI update will be handled by onAuthStateChange
+    showToast("You have been signed out.");
+    // No need to call updateUserUI(null) here, listener handles it.
+  });
+}
+
+/* ---------------- Auth State Initialization & Handling ---------------- */
+
+// Function to handle the initial setup ONCE auth state is confirmed
+const handleInitialAuthState = (session) => {
+  if (initialAuthCheckDone) return; // Only run this logic once
+
+  console.log("Handling initial auth state:", session);
+  updateUserUI(session); // Update UI with the *confirmed* initial session
+
+  // Show banner ONLY if the confirmed initial state is logged out
+  if (!session?.user && banner) {
+    banner.style.display = "flex"; // Use 'flex' or 'block' based on banner CSS
+  } else if (banner) {
+    banner.style.display = "none";
+  }
+
+  // Ensure profile exists in DB if user is logged in (best effort)
+  if (session?.user) {
+    const { id, email } = session.user;
+    // Use .then() for non-blocking operation
+    supabase
+      .from("profiles")
+      .upsert({ id, email }, { onConflict: "id" })
+      .then(({ error }) => {
+        if (error) {
+          console.warn("⚠️ Initial profile upsert failed:", error.message);
+        } else {
+          console.log("✅ User profile ensured on initial load.");
+        }
+      });
+  }
+
+  initialAuthCheckDone = true; // Mark initial check complete
+};
+
+// --- Auth State Change Listener ---
+supabase.auth.onAuthStateChange(async (event, session) => {
+  console.log("Auth event:", event, session); // Log events for debugging
+
+  // Handle the very first auth event received after page load
+  if (!initialAuthCheckDone) {
+    handleInitialAuthState(session);
+  } else {
+    // Handle subsequent changes (manual login/logout, token refresh etc.)
+    updateUserUI(session);
+
+    // Optional: Upsert profile again on explicit SIGNED_IN event
+    // This can be useful if the initial upsert failed for some reason
+    if (event === "SIGNED_IN" && session?.user) {
+      const { id, email } = session.user;
+      supabase
+        .from("profiles")
+        .upsert({ id, email }, { onConflict: "id" })
+        .then(({ error }) => {
+          if (error)
+            console.warn("⚠️ Subsequent profile upsert failed:", error.message);
+        });
+    }
+  }
+});
+
+/* ---------------- Initial Page Setup Calls ---------------- */
+
+// Select default lenses on page load
+selectLensesByName(["helga", "otter", "whitmore"]);
+// No need to call updateUserUI here, onAuthStateChange handles it.
+console.log("Main.js initialized.");
