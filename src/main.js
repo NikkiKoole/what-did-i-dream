@@ -34,6 +34,7 @@ const userInitials = document.getElementById("user-initials"); // Span for initi
 const loginOption = document.getElementById("login-option"); // Sign In list item
 const logoutOption = document.getElementById("logout-option"); // Sign Out list item
 const creditCountEl = document.getElementById("credit-count"); // Credit display element
+const tokenCountEl = document.getElementById("token-count"); // Credit/token display element
 const journalNavItem = document.getElementById("journal-nav-item"); // Journal link in nav
 
 // Pricing / Checkout
@@ -115,6 +116,7 @@ function updateUserUI(session) {
     } else if (creditCountEl) {
       // Hide credits if element exists but user ID doesn't (shouldn't happen here)
       creditCountEl.style.display = "none";
+      tokenCountEl.style.display = "none";
     }
 
     // --- Hide Free Token Banner ---
@@ -146,6 +148,10 @@ function updateUserUI(session) {
       creditCountEl.textContent = ""; // Clear text
       creditCountEl.style.display = "none";
     }
+    if (tokenCountEl) {
+      tokenCountEl.textContent = ""; // Clear text
+      tokenCountEl.style.display = "none";
+    }
 
     // NOTE: Banner display logic is handled in the initial auth check
   }
@@ -155,6 +161,10 @@ async function fetchUserCredits(userId) {
   // Ensure element exists before proceeding
   if (!creditCountEl) {
     console.warn("Credit count element not found.");
+    return;
+  }
+  if (!tokenCountEl) {
+    console.warn("Token count element not found.");
     return;
   }
 
@@ -171,20 +181,29 @@ async function fetchUserCredits(userId) {
     }
 
     if (data?.credits != null) {
-      creditCountEl.textContent = `Tokens: ${data.credits}`; // Add label for clarity
+      creditCountEl.textContent = `${data.credits}`; // Add label for clarity
       creditCountEl.style.display = "inline-block"; // Or 'flex', 'block' etc.
+
+      tokenCountEl.textContent = `${data.credits}`; // Add label for clarity
+      tokenCountEl.style.display = "inline-block"; // Or 'flex', 'block' etc.
     } else {
       // Profile might exist but credits are null, or profile doesn't exist yet
       console.log(
         "User profile found, but credits are null or profile not yet created with credits.",
       );
-      creditCountEl.textContent = "Tokens: 0"; // Display 0 if no credits found/profile missing
+      creditCountEl.textContent = "0"; // Display 0 if no credits found/profile missing
       creditCountEl.style.display = "inline-block";
+
+      tokenCountEl.textContent = "0"; // Display 0 if no credits found/profile missing
+      tokenCountEl.style.display = "inline-block";
     }
   } catch (error) {
     console.error("Error fetching user credits:", error);
     creditCountEl.textContent = ""; // Clear on error
     creditCountEl.style.display = "none"; // Hide on error
+
+    tokenCountEl.textContent = ""; // Clear on error
+    tokenCountEl.style.display = "none"; // Hide on error
   }
 }
 
