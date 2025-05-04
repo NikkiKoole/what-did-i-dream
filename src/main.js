@@ -49,6 +49,31 @@ let initialAuthCheckDone = false; // Flag to ensure initial auth logic runs only
 
 /* ---------------- UI Functions ---------------- */
 
+function handleCheckoutResult() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const checkoutStatus = urlParams.get("checkout");
+  // const sessionId = urlParams.get('session_id'); // Optional: if you need the session ID later
+
+  if (checkoutStatus === "success") {
+    showToast("Purchase successful! Your credits will be updated shortly.");
+    // Optional: You could try to force a credit refresh here,
+    // but it's better to rely on the webhook + onAuthStateChange or manual refresh.
+    // supabase.auth.getSession().then(({ data: { session } }) => {
+    //     if (session?.user) {
+    //         fetchUserCredits(session.user.id);
+    //     }
+    // });
+
+    // Clean the URL to remove query parameters
+    // This prevents the toast from showing again on refresh
+    history.replaceState(null, "", window.location.pathname);
+  } else if (checkoutStatus === "cancel") {
+    showToast("Purchase cancelled. Your cart is empty.");
+    // Clean the URL
+    history.replaceState(null, "", window.location.pathname);
+  }
+}
+
 function showToast(message) {
   if (!toast) return;
   toast.textContent = message;
@@ -693,5 +718,6 @@ supabase.auth.onAuthStateChange(async (event, session) => {
 
 // Select default lenses on page load
 selectLensesByName(["helga", "otter", "whitmore"]);
+handleCheckoutResult();
 // No need to call updateUserUI here, onAuthStateChange handles it.
 console.log("Main.js initialized.");
